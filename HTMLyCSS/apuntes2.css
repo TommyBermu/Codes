@@ -1,0 +1,23 @@
+* {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    padding: 0px;
+    margin: 0px;
+}
+
+.contact-form {
+    font-size: 25px;
+}
+
+.contact-form__h2 {
+    font-size: 2em; /*el em por defecto es 16px, pero al decir que el font-size sea de 25px, el em cambia a 25px*/
+    line-height: 2;
+    color: red;
+}
+
+.class-form {
+    font-size: 25px;
+    background-color: #000;
+    width: 50vw; /*viewport widtg, el "porcentaje" de la pantalla del dispositivo*/
+    height: 20vh; /*pero no se usa porcentaje porque con este se refiere a la caja contenedora*/
+}

@@ -1,0 +1,46 @@
+* {
+    color: blue; /*general*/
+}
+h1 {
+    color:red; /*por elemetos*/
+}
+.clase_1 { /*por clase*/
+    color: green;
+}
+#id_1 {
+    color: purple; /*por id*/
+}
+[sapo="nea"] {
+    color:aqua; /*por atributo*/
+}
+ul li {
+    color:rgb(43, 226, 67); /*por herencia*/
+}
+ul #nea:hover {
+    color:red; /*por psedo-elemento*/
+}
+
+img {
+    height: 200px;
+}
+
+video {
+    height: 224px;
+}
+
+/*  Jerarquia de Especificidad
+!important
+Estilos en Linea
+Identificadores
+Clases, Pseudo-clases, Atributos
+Elementos, Pseudo-elementos
+*/
+
+#id-azul {
+    color: blue;
+}
+
+.clase-rojo {
+    color: red !important /*tiene mas importancia el ID pero el !important hace que se haga el estilo de la clase*/
+}
+
