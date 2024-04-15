@@ -1,12 +1,13 @@
 package Abstract;
 
-public class Circulo extends Figura{
+public class Circulo extends Figura {
 
     private double radio;
 
-    public Circulo(){}
+    public Circulo() {
+    }
 
-    public Circulo(double radio, double x, double y){
+    public Circulo(double radio, double x, double y) {
         super(x, y);
         this.radio = radio;
     }
