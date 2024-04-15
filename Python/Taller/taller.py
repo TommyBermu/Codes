@@ -67,7 +67,7 @@ def crear_collage(matriz):
 
 
 # Debe sustituir el nombre del archivo.
-archivo = 'Python\\imagen.jpg' # C:\\Users\\loque\\Documents\\Backup\\Codes\\Python\\imagen.jpg
+archivo = 'Python\\Taller\\imagen.jpg' # C:\\Users\\loque\\Documents\\Backup\\Codes\\Python\\imagen.jpg
 
 ## Código de prueba 1 - Prueba de redimensionar
 imagen_una_fila = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
