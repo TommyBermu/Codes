@@ -42,6 +42,14 @@ class NoPrimitivos {
         /*los tipos de datos no primitivos tienen metodos con los que puedo jugar :p
         numero.(metodo) // cadena.(metodo)
         */ 
+
+        enum Color {ROJO, AMARILLO, AZUL, ANARANJADO, VERDE, MORADO, NEGRO, BLANCO} // es como si fuera una clase 
+        Color colo = Color.AMARILLO; 
+        System.out.println("El color es: " + colo);
+
+        for (Color c: Color.values()) {
+            System.out.println("El color es: " + c);
+        }
     }
 }
 
