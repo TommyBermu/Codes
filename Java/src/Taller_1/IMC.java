@@ -1,10 +1,10 @@
-package Universidad;
+package Taller_1;
 import java.util.Scanner;
 class Persona {
     String Nombre, Genero;
     double Peso, Altura;
     int Edad;
-    void __init__(){
+    public Persona(){
         Scanner sc = new Scanner(System.in);
         Nombre = sc.nextLine();
         Edad = sc.nextInt();
@@ -32,7 +32,6 @@ class Persona {
 class Solution1 {
     public static void main(String[] args) {
         Persona mano = new Persona();
-        mano.__init__();
         System.out.println(mano.calcularIMC());
         System.out.println("Mayor de edad: " + mano.esMayorDeEdad());
         System.out.println(mano.toString());

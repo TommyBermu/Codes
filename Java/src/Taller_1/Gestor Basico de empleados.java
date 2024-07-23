@@ -1,10 +1,10 @@
-package Universidad;
+package Taller_1;
 import java.util.Scanner;
 class Empleado {
     String Nombre, Genero, Departamento;
     int Edad, semanasCotizadas;
     double Salario;
-    void __init__(String Nombre, String Genero, String Departamento, int Edad, int Semanas, double Salario){
+    public Empleado(String Nombre, String Genero, String Departamento, int Edad, int Semanas, double Salario){
         this.Nombre = Nombre;
         this.Genero = Genero;
         this.Departamento = Departamento;
@@ -36,7 +36,6 @@ class Empleado {
 
 class solution2 {
     public static void main(String[] args) {
-        Empleado mano = new Empleado();
         Scanner sc = new Scanner(System.in);
 
         String Nombre = sc.nextLine();
@@ -46,7 +45,7 @@ class solution2 {
         int Semanas  = sc.nextInt(); sc.nextLine();
         double Salario = sc.nextDouble();
 
-        mano.__init__(Nombre, Genero, Departamento, Edad, Semanas, Salario);
+        Empleado mano = new Empleado(Nombre, Genero, Departamento, Edad, Semanas, Salario);
         mano.AumentarSalario(mano.obtenerBonificacion(mano.semanasCotizadas));
         boolean comp = mano.DerechoPensionarse(mano.Genero, mano.semanasCotizadas, mano.Edad);
         System.out.println("Su nuevo salario es:" + mano.Salario);

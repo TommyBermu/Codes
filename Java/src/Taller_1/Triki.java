@@ -1,9 +1,9 @@
-package Universidad;
+package Taller_1;
 import java.util.Scanner;
 
 class Triki {
     String triki[][] = new String[3][3];
-    public void triki() {
+    public Triki() {
         for (int i = 0; i < triki.length; i++) {
             for (int j = 0; j < triki[i].length; j++) {
                 triki[i][j] = "a";
@@ -55,7 +55,6 @@ class Solution0 {
     public static void main(String[] args) {
         Triki mat = new Triki();
         Scanner sc = new Scanner(System.in);
-        mat.triki();
         String casilla;
         int fila, columna;
         while (mat.verificarGanador().equals("a")){
