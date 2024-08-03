@@ -1,17 +1,21 @@
 package Parcial_1;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
-public class Main {
+public class FirstMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        sc.useLocale(Locale.ENGLISH);
 
         //se crea una lista en la que se almacenen todos los puntos
         ArrayList <Punto> puntos = new ArrayList<Punto>();
         int cantPuntos = sc.nextInt();
         int dimensionPuntos = sc.nextInt();
         for (int i = 0; i < cantPuntos; i++){
+
+            //se crea una lista para guardar las coordenadas de cada punto, y pasarlo al Array de puntos
             ArrayList <Double> posicion = new ArrayList<Double>();
             for (int j = 0; j < dimensionPuntos; j++){
                 posicion.add(sc.nextDouble());
@@ -23,6 +27,8 @@ public class Main {
         ArrayList <Cluster> clusters = new ArrayList<Cluster>();
         int cantClusters = sc.nextInt();
         for (int i = 0; i < cantClusters; i++){
+
+            //se crea una lista para guardar las coordenadas de cada cluster, y pasarlo al Array de clusters
             ArrayList <Double> posicion = new ArrayList<Double>();
             for (int j = 0; j < dimensionPuntos; j++){
                 posicion.add(sc.nextDouble());
@@ -35,10 +41,10 @@ public class Main {
 
         //parámetro P para Minkowski
         int p = sc.nextInt();
-        
+
         sc.close();
 
         KMeans kmeans = new KMeans(clusters, puntos, cantIterciones, p);
-        kmeans.imprimir();
+        kmeans.imprimirPuntos();
     }
 }

@@ -32,8 +32,8 @@ public class Cluster {
 
     public void actualizarCentroide(){
         ArrayList<Double> posicion = new ArrayList<Double>();
-        double prom = 0.0;
         for (int i = 0; i < centro.getDimension(); i++){
+            double prom = 0.0;
             for (Punto iPunto: puntos) {
                 prom += iPunto.getCoord(i);
             }
@@ -47,6 +47,6 @@ public class Cluster {
     }
 
     public String toString(){
-        return puntos.toString();
+        return "Centroide: " + centro.toString();
     }
 }

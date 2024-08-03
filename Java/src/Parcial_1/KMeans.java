@@ -33,26 +33,33 @@ public class KMeans {
                 this.clusters.get(clusterMasCercano).addPunto(iPunto);
             }
 
-            //se actualizan los centroides de cada cluster
+            //si es la última iteración, que no se reinicie la lista de puntos del cluster
             for (Cluster iCluster: this.clusters){
                 iCluster.actualizarCentroide();
-            }
-            //si es la última iteración, que no se reinicie la lista de puntos del cluster
-            if (i != iteraciones -1){
-                for (Cluster iCluster: this.clusters){
+                if (i != iteraciones -1){
                     iCluster.reiniciarPuntos();
                 }
             }
         }
     }
 
-    public void imprimir(){
-        System.out.println("c1 centro: " + clusters.get(0).getCentro() + ", puntos: " + clusters.get(0).toString());
-        System.out.println("c2 centro: " + clusters.get(1).getCentro() + ", puntos: " + clusters.get(1).toString());
-        System.out.println("c3 centro: " + clusters.get(2).getCentro() + ", puntos: " + clusters.get(2).toString());
+    public void imprimirPuntos(){
+        String imprimible = "";
+        for (short i = 0; i < clusters.size(); i++){
+            imprimible += "Cluster " + (i + 1) + " - " + clusters.get(i).toString() + "\nPuntos en el cluster:\n" ;
+            for (short j = 0; j < clusters.get(i).getPuntos().size(); j++) {
+                imprimible += clusters.get(i).getPuntos().get(j).toString();
+                imprimible += (i == clusters.size()-1 && j == clusters.get(i).getPuntos().size()-1 ? "" : "\n") + (j == clusters.get(i).getPuntos().size()-1 && i != clusters.size()-1 ? "\n" : "");
+            }
+        }
+        System.out.println(imprimible);
     }
 
-    public String toString(){
-        return "sapo";
+    public void imprimirPalabras(){
+        String imprimible = "";
+        for (short i = 0; i < clusters.size(); i++){
+            imprimible += "Cluster " + (i + 1) + "\nPalabras en el cluster:\n";
+        }
+        System.out.println(imprimible);
     }
 }

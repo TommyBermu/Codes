@@ -69,7 +69,7 @@ public class Solution {
 
         // Fracción más Cercano
 
-        /*
+        /* 
 
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
@@ -88,6 +88,23 @@ public class Solution {
         }
         System.out.println(lista.get(posicion).Resta(target).Mixto());
         System.out.println(lista.get(posicion).Mixto());
+        sc.close();
+
+        */
+
+        // Fracciones 5
+
+        /*
+
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        List <Fraccion> lista = new ArrayList<Fraccion>();
+        for(int i = 0; i < N; i++){
+            lista.add(new Fraccion(sc.nextInt(), sc.nextInt()));
+        }
+        for (Fraccion fraccion : lista) {
+            System.out.println(fraccion);
+        }
         sc.close();
 
         */
