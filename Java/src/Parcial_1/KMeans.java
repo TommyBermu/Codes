@@ -1,39 +1,32 @@
 package Parcial_1;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class KMeans {
-    private ArrayList<Cluster> clusters;
-    private ArrayList<Punto> puntos;
+    private Cluster[] clusters;
+    private Punto[] puntos;
 
-    public KMeans(ArrayList<Cluster> clusters, ArrayList<Punto> puntos, int iteraciones, int p){
+    public KMeans(Cluster[] clusters, Punto[] puntos, int iteraciones, double p){
         this.clusters = clusters;
         this.puntos = puntos;
 
-        //implementación del algoritmo de K-Means
         for (int i = 0; i < iteraciones; i++){
 
-            //asigna cada punto al cluster más cercano
             for (Punto iPunto: this.puntos) {
 
-                //inicio con el primer cluster para tener un punto de comparación
                 int clusterMasCercano = 0;
-                Double minDistancia = iPunto.calcularMinkowski(this.clusters.get(clusterMasCercano).getCentro(), p);
+                double minDistancia = iPunto.calcularMinkowski(this.clusters[clusterMasCercano].getCentro(), p);
 
-                //comparo las distancias del punto al centro de los clusters restantes
-                for (int j = 1; j < this.clusters.size(); j++){
-                    Double next = iPunto.calcularMinkowski(this.clusters.get(j).getCentro(), p);
+                for (int j = 1; j < this.clusters.length; j++){
+                    double next = iPunto.calcularMinkowski(this.clusters[j].getCentro(), p);
                     if (next < minDistancia){
                         minDistancia = next;
                         clusterMasCercano = j;
                     }
                 }
-
-                //agrego el punto en el que se está al cluster más cercano
-                this.clusters.get(clusterMasCercano).addPunto(iPunto);
+                this.clusters[clusterMasCercano].addPunto(iPunto);
             }
 
-            //si es la última iteración, que no se reinicie la lista de puntos del cluster
             for (Cluster iCluster: this.clusters){
                 iCluster.actualizarCentroide();
                 if (i != iteraciones -1){
@@ -45,20 +38,26 @@ public class KMeans {
 
     public void imprimirPuntos(){
         String imprimible = "";
-        for (short i = 0; i < clusters.size(); i++){
-            imprimible += "Cluster " + (i + 1) + " - " + clusters.get(i).toString() + "\nPuntos en el cluster:\n" ;
-            for (short j = 0; j < clusters.get(i).getPuntos().size(); j++) {
-                imprimible += clusters.get(i).getPuntos().get(j).toString();
-                imprimible += (i == clusters.size()-1 && j == clusters.get(i).getPuntos().size()-1 ? "" : "\n") + (j == clusters.get(i).getPuntos().size()-1 && i != clusters.size()-1 ? "\n" : "");
+        for (int i = 0; i < clusters.length; i++){
+            imprimible += "Cluster " + (i + 1) + " - " + clusters[i].toString() + "\nPuntos en el cluster:\n" ;
+            for (int j = 0; j < clusters[i].getPuntos().size(); j++){
+                imprimible += clusters[i].getPuntos().get(j).toString();
+                imprimible += (i == clusters.length-1 && j == clusters[i].getPuntos().size()-1 ? "" : "\n");
             }
+            imprimible += (i < clusters.length -1 ? "\n" : "");
         }
         System.out.println(imprimible);
     }
 
-    public void imprimirPalabras(){
+    public void imprimirPalabras(HashMap <String, String> asociacion){
         String imprimible = "";
-        for (short i = 0; i < clusters.size(); i++){
+        for (int i = 0; i < clusters.length; i++){
             imprimible += "Cluster " + (i + 1) + "\nPalabras en el cluster:\n";
+            for (int j = 0; j < clusters[i].getPuntos().size(); j++){
+                imprimible += asociacion.get(clusters[i].getPuntos().get(j).toString());
+                imprimible += (i == clusters.length-1 && j == clusters[i].getPuntos().size()-1 ? "" : "\n");
+            }
+            imprimible += (i < clusters.length -1 ? "\n" : "");
         }
         System.out.println(imprimible);
     }

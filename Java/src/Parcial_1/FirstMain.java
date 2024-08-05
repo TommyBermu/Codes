@@ -1,6 +1,5 @@
 package Parcial_1;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -10,41 +9,40 @@ public class FirstMain {
         sc.useLocale(Locale.ENGLISH);
 
         //se crea una lista en la que se almacenen todos los puntos
-        ArrayList <Punto> puntos = new ArrayList<Punto>();
         int cantPuntos = sc.nextInt();
+        Punto[] puntos = new Punto[cantPuntos];
         int dimensionPuntos = sc.nextInt();
+
         for (int i = 0; i < cantPuntos; i++){
 
             //se crea una lista para guardar las coordenadas de cada punto, y pasarlo al Array de puntos
-            ArrayList <Double> posicion = new ArrayList<Double>();
+            double[] posicion = new double[dimensionPuntos];
             for (int j = 0; j < dimensionPuntos; j++){
-                posicion.add(sc.nextDouble());
+                posicion[j] = sc.nextDouble();
             }
-            puntos.add(new Punto(posicion));
+            puntos[i] = new Punto(posicion);
         }
 
         //se crea una lista en la que se almacenen los clusters
-        ArrayList <Cluster> clusters = new ArrayList<Cluster>();
         int cantClusters = sc.nextInt();
+        Cluster[] clusters = new Cluster[cantClusters];
         for (int i = 0; i < cantClusters; i++){
 
             //se crea una lista para guardar las coordenadas de cada cluster, y pasarlo al Array de clusters
-            ArrayList <Double> posicion = new ArrayList<Double>();
+            double[] posicion = new double[dimensionPuntos];
             for (int j = 0; j < dimensionPuntos; j++){
-                posicion.add(sc.nextDouble());
+                posicion[j] = sc.nextDouble();
             }
-            clusters.add(new Cluster(new Punto(posicion)));
+            clusters[i] = new Cluster(new Punto(posicion));
         }
 
         //cantidad de iteraciones para K-Means
         int cantIterciones = sc.nextInt();
-
         //parámetro P para Minkowski
         int p = sc.nextInt();
-
         sc.close();
 
-        KMeans kmeans = new KMeans(clusters, puntos, cantIterciones, p);
+        KMeans kmeans = new KMeans(clusters, puntos, cantIterciones, (double)p);
         kmeans.imprimirPuntos();
     }
 }
