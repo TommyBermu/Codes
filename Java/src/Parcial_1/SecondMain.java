@@ -11,9 +11,7 @@ public class SecondMain {
         Punto[] palabrasComoPunto = new Punto[cantPalabras];
 
         for (int i = 0; i < cantPalabras; i++) {
-            String palabra = sc.nextLine();
-            Punto palabraCalculada = new Punto(palabra);
-            palabrasComoPunto[i] = palabraCalculada;
+            palabrasComoPunto[i] = new Punto(sc.nextLine());
         }
 
         final int cantClusters = sc.nextInt();
