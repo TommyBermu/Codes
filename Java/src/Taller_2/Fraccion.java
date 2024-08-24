@@ -95,7 +95,7 @@ public class Fraccion implements Comparable<Fraccion> {
         Asignar(num_crudo / div, den_crudo / div);
     }
 
-    long GCD(long a, long b) {
+    private long GCD(long a, long b) {
         if (a == 0)
             return b;
         if (b == 0)
