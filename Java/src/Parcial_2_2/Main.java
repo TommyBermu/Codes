@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("C:/Users/bermu/Desktop/input1.txt"));
+        Scanner sc = new Scanner(new File("Java/src/Parcial_2_2/input1.txt"));
         boolean ganador = false;
 
         System.out.println("Comienza la batalla");
@@ -30,10 +30,6 @@ public class Main {
             switch (opcion){
                 case 1:
                     heroe.atacar(villano);
-                    if (villano.getVida() <= 0){
-                        ganador = true;
-                        System.out.println("Has derrotado al villano.");
-                    }
                     break;
                 case 2:
                     String habilidad = sc.nextLine();
@@ -52,11 +48,15 @@ public class Main {
                     }
                     break;
             }
-            if (!ganador){
+
+            if (villano.getVida() <= 0){
+                System.out.println("Has derrotado al villano.");
+                ganador = true;
+            } else {
                 villano.atacar(heroe);
                 if (heroe.getVida() <= 0){
+                    System.out.println("El heroe ha sido derrotado.");
                     ganador = true;
-                    System.out.println("El heroe ha sido derrotado");
                 }
             }
         }

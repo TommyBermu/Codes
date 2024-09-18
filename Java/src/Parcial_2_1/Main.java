@@ -10,7 +10,7 @@ public class Main {
     static ArrayList<Reserva> reservas = new ArrayList<>();
     static HashMap<String, Pasajero> pasajeros = new HashMap<>();
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("C:/Users/bermu/Desktop/input3.txt"));
+        Scanner sc = new Scanner(new File("Java/src/Parcial_2_1/input1.txt"));
         boolean exit = false;
         
         while (!exit) {
@@ -46,18 +46,30 @@ public class Main {
                     String clase = sc.nextLine();
                     String nombre_pasajero = sc.nextLine();
                     int cant_sillas = sc.nextInt();
+
+                    Avion avion = vuelos.get(numero_vuelo).getAvion();
+
                     sc.nextLine();
-
-                    Avion avion = aviones.get(vuelos.get(numero_vuelo).getAvion().getEmpresa());
-
-                    if (clase.equals("Economica")) {
-                        if(avion.agregarSilla_economica(cant_sillas))
-                            procesarReserva(cant_sillas, numero_vuelo, clase, pasajeros.get(nombre_pasajero), tipo_vuelo); 
+                    try {
+                        if (tipo_vuelo == 1) {
+                            if (clase.equals("Economica")) 
+                                avion.agregarSilla_economica(cant_sillas); 
+                            else
+                                avion.agregarSilla_ejecutiva(cant_sillas);
+                            reservas.add(new Reserva((VueloNacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajeros.get(nombre_pasajero))); 
+                        }
+                        else if (tipo_vuelo == 2){
+                            if (clase.equals("Economica")) 
+                                avion.agregarSilla_economica(cant_sillas); 
+                            else
+                                avion.agregarSilla_ejecutiva(cant_sillas);
+                            reservas.add(new Reserva((VueloInternacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajeros.get(nombre_pasajero)));
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("Error al crear la reserva: No hay suficientes asientos disponibles.");
                     }
-                    else if (clase.equals("Ejecutiva")){
-                        if(avion.agregarSilla_ejecutiva(cant_sillas))
-                            procesarReserva(cant_sillas, numero_vuelo, clase, pasajeros.get(nombre_pasajero), tipo_vuelo);
-                    }
+
+                    
                     
                     break;
                 case 4:
@@ -86,13 +98,5 @@ public class Main {
             }
         }
         sc.close();
-    }
-
-    public static void procesarReserva(int cant_sillas, int numero_vuelo, String clase, Pasajero pasajero, int tipo_vuelo){
-        if (tipo_vuelo == 1){
-            reservas.add(new Reserva((VueloNacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajero));
-        } else if (tipo_vuelo == 2){
-            reservas.add(new Reserva((VueloInternacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajero));
-        }
     }
 }

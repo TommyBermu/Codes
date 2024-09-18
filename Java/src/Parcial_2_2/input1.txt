@@ -1,0 +1,24 @@
+Superman
+200
+20
+60
+Lex Luthor
+180
+20
+1
+1
+2
+aumentar_vida
+1
+2
+duplicar_ataque
+2
+duplicar_ataque
+2
+duplicar_ataque
+3
+duplicar_ataque
+1
+2
+duplicar_ataque
+1

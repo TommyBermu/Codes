@@ -3,9 +3,7 @@ package Parcial_2_1;
 public class Avion {
     private String empresa;
     private Silla[] capacidad_economica;
-    private int e_pointer = 0; 
     private Silla[] capacidad_ejecutiva;
-    private int c_pointer = 0;
 
     public Avion() {
     }
@@ -33,29 +31,13 @@ public class Avion {
         return capacidad_ejecutiva.length;
     }
 
-    public boolean agregarSilla_economica(int cantidad_sillas) {
-        try{
-            for (int i = 0; i < cantidad_sillas; i++) {
-                capacidad_economica[e_pointer] = new Silla("Economica");
-                e_pointer++;
-            }
-            return true;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error al crear la reserva: No hay suficientes asientos disponibles.");
-            return false;
-        }
+    public void agregarSilla_economica(int cantidad_sillas) {
+        for (int i = 0; i < cantidad_sillas; i++)
+            capacidad_economica[i] = new Silla("Economica");
     }
 
-    public boolean agregarSilla_ejecutiva(int cantidad_sillas) {
-        try {
-            for (int i = 0; i < cantidad_sillas; i++) {
-                capacidad_ejecutiva[c_pointer] = new Silla("Ejecutiva");
-                c_pointer++;
-            }
-            return true;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error al crear la reserva: No hay suficientes asientos disponibles.");
-            return false;
-        }
+    public void agregarSilla_ejecutiva(int cantidad_sillas) {
+        for (int i = 0; i < cantidad_sillas; i++)
+            capacidad_ejecutiva[i] = new Silla("Ejecutiva");
     }
 }

@@ -12,6 +12,7 @@ public class Solution {
         boolean exit = false;
         
         while (!exit) {
+            //System.out.println("\n1. Registrar un avion\n2. Registrar un pasajero\n3. Crear una reserva\n4. Crear un vuelo nacional\n5. Crear un vuelo internacional\n6. Mostrar la informacion del vuelo con el numero de Vuelo\n0. Salir\n");
             short option = sc.nextShort();
             if (sc.hasNext())
                 sc.nextLine();
@@ -43,18 +44,30 @@ public class Solution {
                     String clase = sc.nextLine();
                     String nombre_pasajero = sc.nextLine();
                     int cant_sillas = sc.nextInt();
+
+                    Avion avion = vuelos.get(numero_vuelo).getAvion();
+
                     sc.nextLine();
-
-                    Avion avion = aviones.get(vuelos.get(numero_vuelo).getAvion().getEmpresa());
-
-                    if (clase.equals("Economica")) {
-                        if(avion.agregarSilla_economica(cant_sillas))
-                            procesarReserva(cant_sillas, numero_vuelo, clase, pasajeros.get(nombre_pasajero), tipo_vuelo);
+                    try {
+                        if (tipo_vuelo == 1) {
+                            if (clase.equals("Economica")) 
+                                avion.agregarSilla_economica(cant_sillas); 
+                            else
+                                avion.agregarSilla_ejecutiva(cant_sillas);
+                            reservas.add(new Reserva((VueloNacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajeros.get(nombre_pasajero))); 
+                        }
+                        else if (tipo_vuelo == 2){
+                            if (clase.equals("Economica")) 
+                                avion.agregarSilla_economica(cant_sillas); 
+                            else
+                                avion.agregarSilla_ejecutiva(cant_sillas);
+                            reservas.add(new Reserva((VueloInternacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajeros.get(nombre_pasajero)));
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("Error al crear la reserva: No hay suficientes asientos disponibles.");
                     }
-                    else if (clase.equals("Ejecutiva")){
-                        if(avion.agregarSilla_ejecutiva(cant_sillas))
-                            procesarReserva(cant_sillas, numero_vuelo, clase, pasajeros.get(nombre_pasajero), tipo_vuelo);
-                    }
+
+                    
                     
                     break;
                 case 4:
@@ -84,22 +97,12 @@ public class Solution {
         }
         sc.close();
     }
-
-    public static void procesarReserva(int cant_sillas, int numero_vuelo, String clase, Pasajero pasajero, int tipo_vuelo){
-        if (tipo_vuelo == 1){
-            reservas.add(new Reserva((VueloNacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajero));
-        } else if (tipo_vuelo == 2){
-            reservas.add(new Reserva((VueloInternacional)vuelos.get(numero_vuelo), cant_sillas, clase, pasajero));
-        }
-    }
 }
 
 class Avion {
     private String empresa;
     private Silla[] capacidad_economica;
-    private int e_pointer = 0; 
     private Silla[] capacidad_ejecutiva;
-    private int c_pointer = 0;
 
     public Avion() {
     }
@@ -122,35 +125,19 @@ class Avion {
     public int getCapacidad_economica() {
         return capacidad_economica.length;
     }
-
-    public boolean agregarSilla_economica(int cantidad_sillas) {
-        try{
-            for (int i = 0; i < cantidad_sillas; i++) {
-                capacidad_economica[e_pointer] = new Silla("Economica");
-                e_pointer++;
-            }
-            return true;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error al crear la reserva: No hay suficientes asientos disponibles.");
-            return false;
-        }
-    }
-
+    
     public int getCapacidad_ejecutiva() {
         return capacidad_ejecutiva.length;
     }
 
-    public boolean agregarSilla_ejecutiva(int cantidad_sillas) {
-        try {
-            for (int i = 0; i < cantidad_sillas; i++) {
-                capacidad_ejecutiva[c_pointer] = new Silla("Ejecutiva");
-                c_pointer++;
-            }
-            return true;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error al crear la reserva: No hay suficientes asientos disponibles.");
-            return false;
-        }
+    public void agregarSilla_economica(int cantidad_sillas) {
+        for (int i = 0; i < cantidad_sillas; i++)
+            capacidad_economica[i] = new Silla("Economica");
+    }
+
+    public void agregarSilla_ejecutiva(int cantidad_sillas) {
+        for (int i = 0; i < cantidad_sillas; i++)
+            capacidad_ejecutiva[i] = new Silla("Ejecutiva");
     }
 }
 

@@ -21,17 +21,13 @@ public class Solution {
         Villano villano = new Villano(nombre_villano, vida_villano, dano_villano);
 
         while (!ganador){
-            byte opcion = sc.nextByte();
+            int opcion = sc.nextInt();
             if (sc.hasNextLine())
                 sc.nextLine();
 
             switch (opcion){
                 case 1:
                     heroe.atacar(villano);
-                    if (villano.getVida() <= 0){
-                        ganador = true;
-                        System.out.println("Has derrotado al villano.");
-                    }
                     break;
                 case 2:
                     String habilidad = sc.nextLine();
@@ -50,11 +46,15 @@ public class Solution {
                     }
                     break;
             }
-            if (!ganador){
+
+            if (villano.getVida() <= 0){
+                System.out.println("Has derrotado al villano.");
+                ganador = true;
+            } else {
                 villano.atacar(heroe);
                 if (heroe.getVida() <= 0){
+                    System.out.println("El heroe ha sido derrotado.");
                     ganador = true;
-                    System.out.println("El heroe ha sido derrotado");
                 }
             }
         }
