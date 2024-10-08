@@ -44,7 +44,7 @@ class NoPrimitivos {
         */ 
 
         enum Color {ROJO, AMARILLO, AZUL, ANARANJADO, VERDE, MORADO, NEGRO, BLANCO} // es como si fuera una clase 
-        Color colo = Color.AMARILLO; 
+        Color colo = Color.AMARILLO; //se puede instanciar un enum
         System.out.println("El color es: " + colo);
 
         for (Color c: Color.values()) {
