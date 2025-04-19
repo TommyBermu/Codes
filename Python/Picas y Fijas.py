@@ -18,21 +18,22 @@ while True:
     while True:
 
         num_us = input('\nIngrese un número de 4 dígitos, los cuales no pueden repetirse: ')
-        
-        cn , cs = 0 , 0
+    
                         #==comandos==#
-        if num_us == "exit": #un comando para salir xd
-            cs = 1
-            break
+        cn , ce = 0 , 0
         if num_us == "num": #un comando para mostrar el numero del computador
             print(list_pc)
             cn = 1
+        elif num_us == "exit": #un comando para salir xd
+            ce = 1
+            break
+            
                       #==fin comandos==#
         for i in num_us:
             try:
                 i = int(i)
             except:
-                if cn == 1:
+                if cn == 1: 
                     continue
                 else:
                     print(f"\nError, {i} no es un número")
@@ -48,7 +49,7 @@ while True:
         else:
             break
             
-    if cs == 1:
+    if ce == 1:
         print('\nSaliendo...\n')
         break
     
