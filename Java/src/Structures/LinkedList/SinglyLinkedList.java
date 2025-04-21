@@ -6,60 +6,69 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     @Override
     public void pushFront(T item) { //O(1)
         Node<T> node = new Node<>(item);
+        if (isEmpty()){
+            System.out.println("es una lista vacia");
+            tail = node;
+        }
         node.next = head;
         head = node;
-        if (isEmpty())
-            tail = node;
     }
 
     @Override
     public T topFront() { //O(1)
-        if (!isEmpty())
-            return head.element;
-        else 
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
+
+        return head.element;
     }
 
     @Override
     public T popFront() { //O(1)
-        if(!isEmpty()){
-            T ret = head.element;
-            head = head.next;
-            tail = head.next == null ? head : tail; // si el tamaño de la lista es 1, al eliminar, que la cola sea null, si no, que se mantenga igual
-            return ret;
-        }
-        else
+        if(isEmpty())
             throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
+
+        T ret = head.element;
+        head = head.next;
+        tail = head.next == null ? head : tail; // si el tamaño de la lista es 1, al eliminar, que la cola sea null, si no, que se mantenga igual
+        return ret;
     }
 
     @Override
     public void pushBack(T item) { //O(1)
         Node<T> node = new Node<>(item);
-        node.next = tail;
-        tail = node;
         if (isEmpty())
             head = node;
+        else
+            tail.next = node;
+        tail = node;
     }
 
     @Override
     public T topBack() { //O(1)
-        if (!isEmpty())
-            return tail.element;
-        else
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
+
+        return tail.element;
     }
 
     @Override
-    public T popBack() { //O(1)
-        if(!isEmpty()){
-            T ret = tail.element;
-            tail = tail.prev; // TODO es solo con un enlace xd
-            tail.next = null; // TODO ver si esta bien
-            head = head.next == null ? tail : head; // si el tamaño de la lista es 1, al eliminar, que la cola sea null, si no, que se mantenga igual
+    public T popBack() { //O(n)
+        if(isEmpty())
+            throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
+
+        if (head == tail) {
+            T ret = head.element;
+            head = tail = null;
             return ret;
         }
-        else
-            throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
+        
+        Node<T> iter = head;
+        while (iter.next.next != null)
+            iter = iter.next;
+        T ret = iter.next.element;
+        iter.next = null;
+        tail = iter;
+        return ret;
     }
 
     @Override
@@ -93,6 +102,14 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
     @Override
     public String toString() {
-        return "sapo";
+        String ret = "LinkedList: [";
+        Node<T> iter = head;
+        if (!isEmpty())
+            ret += iter;
+        while(iter.next != null){
+            iter = iter.next;
+            ret += ", " + iter.element;
+        }
+        return ret + "]";
     }
 }

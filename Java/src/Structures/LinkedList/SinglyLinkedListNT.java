@@ -5,21 +5,22 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     Node<T> head;
 
     @Override
-    public void pushFront(T item) {
+    public void pushFront(T item) { // O(1)
         Node<T> node = new Node<>(item);
         node.next = head;
         head = node;
     }
 
     @Override
-    public T topFront() {
+    public T topFront() { // O(1)
         if (isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
+
         return head.element;
     }
 
     @Override
-    public T popFront() {
+    public T popFront() { //O(1)
         if(isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
 
@@ -29,7 +30,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public void pushBack(T item) {
+    public void pushBack(T item) { // O(n)
         Node<T> node = new Node<>(item);
         if(head != null){
 
@@ -42,7 +43,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public T topBack() {
+    public T topBack() { // O(n)
         if (isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
 
@@ -53,7 +54,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public T popBack() {
+    public T popBack() { // O(n)
         if (isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
         
@@ -73,7 +74,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public boolean find(T key) {
+    public boolean find(T key) { // O(n)
         if(isEmpty())
             return false;
         
@@ -84,7 +85,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public void erase(T key) {
+    public void erase(T key) { // O(n)
         if(isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
         
@@ -104,12 +105,12 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty() { // O(1)
         return head == null;
     }
 
     @Override
-    public void addBefore(T data, T key) {
+    public void addBefore(T data, T key) { // O(n)
         Node<T> node = new Node<>(data);
     
         if(head.element.equals(key)) { // si se debe insertar antes del primer elemento
@@ -129,7 +130,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public void addAfter(T data, T key) {
+    public void addAfter(T data, T key) { // O(n)
         Node<T> node = new Node<>(data);
         Node<T> iter = head;
         for (; !iter.element.equals(key); iter = iter.next)

@@ -154,6 +154,32 @@ public class Main {
             SinglyLinkedList<Integer> singlyLinkedList = new SinglyLinkedList<>();
 
             System.out.println(singlyLinkedList.isEmpty());
+
+            singlyLinkedList.pushFront(6);
+            singlyLinkedList.pushFront(5);
+            singlyLinkedList.pushFront(4);
+            singlyLinkedList.pushFront(3);
+            singlyLinkedList.pushFront(2);
+            singlyLinkedList.pushFront(1);
+ 
+            System.out.println(singlyLinkedList.isEmpty());
+
+            System.out.println(singlyLinkedList);
+
+            singlyLinkedList.pushBack(7);
+
+            System.out.println(singlyLinkedList);
+
+            System.out.println(singlyLinkedList.topFront());
+            System.out.println(singlyLinkedList.topBack());
+
+            System.out.println(singlyLinkedList.popBack());
+
+            System.out.println(singlyLinkedList);
+
+            System.out.println(singlyLinkedList.popFront());
+
+            System.out.println(singlyLinkedList);
             
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println(e);
