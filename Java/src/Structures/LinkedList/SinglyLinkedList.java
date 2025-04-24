@@ -1,5 +1,7 @@
 package Structures.LinkedList;
 
+import java.util.NoSuchElementException;
+
 public class SinglyLinkedList<T> implements LinkedList<T> {
     Node<T> head, tail;
 
@@ -56,7 +58,7 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         if(isEmpty())
             throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
 
-        if (head == tail) {
+        if (head == tail) { // si es el unico elemento
             T ret = head.element;
             head = tail = null;
             return ret;
@@ -73,14 +75,19 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
     @Override
     public boolean find(T key) { //O(n)
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'find'");
+        if(isEmpty())
+            return false;
+
+        for (Node<T> iter = head; iter.next != null; iter = iter.next)
+            if (iter.element.equals(key))
+                return true;
+        return false;
     }
 
     @Override
     public void erase(T key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'erase'");
+        if (isEmpty())
+            throw new NoSuchElementException("Empty Linkedlist");
     }
 
     @Override

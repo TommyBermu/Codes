@@ -129,6 +129,21 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
         iter.next = node;
     }
 
+    public void addBefore(T data, Node<T> key) { // O(n)
+        Node<T> node = new Node<>(data);
+    
+        if(head.equals(key)) { // si se debe insertar antes del primer elemento
+            node.next = head;
+            head = node;
+            return;
+        }
+        
+        Node<T> iter = head;
+        for (; !iter.next.equals(key); iter = iter.next);
+        node.next = iter.next;
+        iter.next = node;
+    }
+
     @Override
     public void addAfter(T data, T key) { // O(n)
         Node<T> node = new Node<>(data);
@@ -139,6 +154,12 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
         
         node.next = iter.next;
         iter.next = node;
+    }
+
+    public void addAfter(T data, Node<T> key) { // O(1)
+        Node<T> node = new Node<>(data);
+        node.next = key.next;
+        key.next = node;
     }
     
     @Override
