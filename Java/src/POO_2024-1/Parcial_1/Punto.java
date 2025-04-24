@@ -1,4 +1,5 @@
-import java.lang.Math;
+package Parcial_1;
+
 import java.util.Arrays;
 
 public class Punto {
@@ -12,10 +13,9 @@ public class Punto {
     public Punto(String palabra) {
         this.palabra = palabra;
         double[] coordenadas = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-        for (Character c : palabra.toCharArray()) {
+        for (Character c : palabra.toCharArray())
             if ((int) c <= 122 && (int) c >= 97)
                 coordenadas[(int) c - 97]++;
-        }
         this.posicion = coordenadas;
     }
 

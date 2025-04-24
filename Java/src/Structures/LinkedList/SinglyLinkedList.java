@@ -85,7 +85,7 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
     @Override
     public boolean isEmpty() {
-        return head == null;
+        return head == null || tail == null;
     }
 
     @Override
