@@ -1,29 +1,38 @@
 package Structures.Queue;
 
-public class CircularQueue<T> {
+public class DynamicCircularQueue<T> {
     private int capacity;
     private int head, tail;
     private T queue[];
-    
+
     @SuppressWarnings("unchecked")
-    public CircularQueue(int capacity){
-        this.capacity = capacity;
+    public DynamicCircularQueue(){
+        this.capacity = 2;
         head = tail = -1;
-        queue = (T[]) new Object[capacity];
+        queue = (T[]) new Object[this.capacity];
+    }
+
+    @SuppressWarnings("unchecked")
+    public void resize(){
+        this.capacity = capacity*2;
+        T temp[] = (T[]) new Object[capacity];
+        for(int i = 0; i <= capacity/2; i++){
+            temp[i] = queue[i];
+        }
+        this.queue = temp;
     }
 
     public void enqueue(T element){
-        if (isFull())
-            throw new ArrayIndexOutOfBoundsException("Queue is full");
-
-        queue[++tail%capacity] = element;
+        if(isFull())
+            resize();
+        queue[++tail%capacity] = element;  
     }
 
     public T dequeue(){
-        if (!isEmpty())
-            return queue[++head%capacity];
-        else
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Queue is empty");
+
+        return queue[++head%capacity];
     }
 
     public boolean isEmpty(){
