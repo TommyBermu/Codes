@@ -6,12 +6,10 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     Node<T> head, tail;
 
     @Override
-    public void pushFront(T item) { //O(1)
-        Node<T> node = new Node<>(item);
-        if (isEmpty()){
-            System.out.println("es una lista vacia");
+    public void pushFront(T data) { //O(1)
+        Node<T> node = new Node<>(data);
+        if (isEmpty())
             tail = node;
-        }
         node.next = head;
         head = node;
     }
@@ -28,16 +26,18 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     public T popFront() { //O(1)
         if(isEmpty())
             throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
-
+        
         T ret = head.element;
-        head = head.next;
-        tail = head.next == null ? head : tail; // si el tamaño de la lista es 1, al eliminar, que la cola sea null, si no, que se mantenga igual
+        if (head == tail) // si solo hay un elemento
+            head = tail = null;
+        else
+            head = head.next;
         return ret;
     }
 
     @Override
-    public void pushBack(T item) { //O(1)
-        Node<T> node = new Node<>(item);
+    public void pushBack(T data) { //O(1)
+        Node<T> node = new Node<>(data);
         if (isEmpty())
             head = node;
         else
@@ -59,14 +59,14 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
             throw new ArrayIndexOutOfBoundsException("Empty Linkedlist");
 
         if (head == tail) { // si es el unico elemento
-            T ret = head.element;
-            head = tail = null;
+            T ret = tail.element;
+            tail = head = null;
             return ret;
         }
         
         Node<T> iter = head;
-        while (iter.next.next != null)
-            iter = iter.next;
+        for (;iter.next.next != null; iter = iter.next);
+        
         T ret = iter.next.element;
         iter.next = null;
         tail = iter;
@@ -78,44 +78,99 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         if(isEmpty())
             return false;
 
-        for (Node<T> iter = head; iter.next != null; iter = iter.next)
-            if (iter.element.equals(key))
-                return true;
-        return false;
+        for (Node<T> iter = head; !iter.element.equals(key); iter = iter.next)
+            if (iter.next == null)
+                return false;
+        return true;
     }
 
     @Override
-    public void erase(T key) {
+    public void erase(T key) { //O(n)
         if (isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
+
+        if(head.element.equals(key)){
+            popFront();
+            return;
+        }
+            
+        if(tail.element.equals(key)){
+            popBack();
+            return;
+        }
+        // si solo tiene un elemento
+        if (head.next == null)
+            throw new NoSuchElementException(key + " not found");
+        
+        // si no es el primero ni el ultimo
+        Node<T> iter = head;
+        for (; !iter.next.element.equals(key); iter = iter.next)
+            if (iter.next == null) // si no se encontro el elemento
+                throw new NoSuchElementException(key + " not found");
+        
+        iter.next = iter.next.next;
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty() { //O(1)
         return head == null || tail == null;
     }
 
     @Override
-    public void addBefore(T data, T key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addBefore'");
+    public void addBefore(T data, T key) { //O(n)
+        if (isEmpty())
+            throw new NoSuchElementException("Empty Linkedlist");
+        
+        if (head.element.equals(key)){
+            pushFront(data);
+            return;
+        }
+
+        // si solo tiene un elemento
+        if (head.next == null)
+            throw new NoSuchElementException(key + " not found");
+        
+        // si tiene mas de un elemento
+        Node<T> iter = head;
+        for (; !iter.next.element.equals(key); iter = iter.next)
+            if (iter.next.next == null)
+                throw new NoSuchElementException(key + " not found");
+
+        Node<T> node = new Node<>(data);
+        node.next = iter.next;
+        iter.next = node;
     }
 
     @Override
-    public void addAfter(T data, T key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addAfter'");
+    public void addAfter(T data, T key) { //O(n)
+        if (isEmpty())
+            throw new NoSuchElementException("Empty Linkedlist");
+        
+        if (tail.element.equals(key)){
+            pushBack(data);
+            return;
+        }
+        
+        Node<T> iter = head;
+        for (; !iter.element.equals(key); iter = iter.next)
+            if (iter.next == null)
+                throw new NoSuchElementException(key + " not found");
+        
+        Node<T> node = new Node<>(data);
+        node.next = iter.next;
+        iter.next = node;
     }
 
     @Override
     public String toString() {
         String ret = "LinkedList: [";
         Node<T> iter = head;
-        if (!isEmpty())
+        if (!isEmpty()){
             ret += iter;
-        while(iter.next != null){
-            iter = iter.next;
-            ret += ", " + iter.element;
+            while(iter.next != null){
+                iter = iter.next;
+                ret += ", " + iter.element;
+            }
         }
         return ret + "]";
     }

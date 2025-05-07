@@ -32,8 +32,7 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     @Override
     public void pushBack(T item) { // O(n)
         Node<T> node = new Node<>(item);
-        if(head != null){
-
+        if(!isEmpty()){
             Node<T> iter = head;
             for (;iter.next != null; iter = iter.next);
 
@@ -58,13 +57,14 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
         if (isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
         
-        
+        // si solo hay un elemento
         if(head.next == null){
             T ret = head.element;
             head = null;
             return ret;
         }
 
+        // si hay mas de uno, osea head.next != null
         Node<T> iter = head;
         for (;iter.next.next != null; iter = iter.next);
 
@@ -90,18 +90,18 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
             throw new NoSuchElementException("Empty Linkedlist");
         
         Node<T> iter = head;
-
-        if (iter.element.equals(key))
-            head = head.next; // si es el primero, entonces que head apunte al siguiente
-        else if (iter.next == null)
-            throw new NoSuchElementException(key + " not found");
-        else {
-            for (;!iter.next.element.equals(key); iter = iter.next){
-                if (iter.next.next == null)
-                    throw new NoSuchElementException(key + " not found");
-            }
-            iter.next = iter.next.next;
+        if (iter.element.equals(key)){ // si es el primero
+            head = head.next;
+            return;
         }
+        if (iter.next == null) // si no es el primero pero es el unico
+            throw new NoSuchElementException(key + " not found");
+
+        for (;!iter.next.element.equals(key); iter = iter.next){ // si hay dos o mas, osea iter.next != null
+            if (iter.next.next == null)
+                throw new NoSuchElementException(key + " not found");
+        }
+        iter.next = iter.next.next;
     }
 
     @Override
@@ -111,66 +111,47 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
 
     @Override
     public void addBefore(T data, T key) { // O(n)
-        Node<T> node = new Node<>(data);
-    
-        if(head.element.equals(key)) { // si se debe insertar antes del primer elemento
-            node.next = head;
-            head = node;
+
+        if(head.element.equals(key)){// si se debe insertar antes del primer elemento
+            pushFront(data);
             return;
         }
         if (head.next == null) // si tiene solo un elemento pero no es el que se busca
             throw new NoSuchElementException(key + " not found");
         
         Node<T> iter = head;
-        for (; !iter.next.element.equals(key); iter = iter.next)
-            if(iter.next == null)
+        for (; !iter.next.element.equals(key); iter = iter.next) // si tiene mas de uno, osea head.next != null
+            if(iter.next.next == null)
                 throw new NoSuchElementException(key + " not found");
-        node.next = iter.next;
-        iter.next = node;
-    }
-
-    public void addBefore(T data, Node<T> key) { // O(n)
-        Node<T> node = new Node<>(data);
-    
-        if(head.equals(key)) { // si se debe insertar antes del primer elemento
-            node.next = head;
-            head = node;
-            return;
-        }
         
-        Node<T> iter = head;
-        for (; !iter.next.equals(key); iter = iter.next);
+        // si se encontro
+        Node<T> node = new Node<>(data);
         node.next = iter.next;
         iter.next = node;
     }
 
     @Override
     public void addAfter(T data, T key) { // O(n)
-        Node<T> node = new Node<>(data);
         Node<T> iter = head;
         for (; !iter.element.equals(key); iter = iter.next)
             if(iter.next == null)
                 throw new NoSuchElementException(key + " not found");
-        
+
+        Node<T> node = new Node<>(data);
         node.next = iter.next;
         iter.next = node;
-    }
-
-    public void addAfter(T data, Node<T> key) { // O(1)
-        Node<T> node = new Node<>(data);
-        node.next = key.next;
-        key.next = node;
     }
     
     @Override
     public String toString() {
         String ret = "LinkedList: [";
         Node<T> iter = head;
-        if (!isEmpty())
+        if (!isEmpty()){
             ret += iter;
-        while(iter.next != null){
-            iter = iter.next;
-            ret += ", " + iter.element;
+            while(iter.next != null){
+                iter = iter.next;
+                ret += ", " + iter.element;
+            }
         }
         return ret + "]";
     }

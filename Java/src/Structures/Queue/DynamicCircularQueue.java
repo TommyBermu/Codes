@@ -14,18 +14,19 @@ public class DynamicCircularQueue<T> {
 
     @SuppressWarnings("unchecked")
     public void resize(){
-        this.capacity = capacity*2;
-        T temp[] = (T[]) new Object[capacity];
-        for(int i = 0; i <= capacity/2; i++){
+        
+        T temp[] = (T[]) new Object[capacity*2];
+        for(int i = 0; i < capacity; i++)
             temp[i] = queue[i];
-        }
+        
+        this.capacity = capacity*2;
         this.queue = temp;
     }
 
     public void enqueue(T element){
         if(isFull())
             resize();
-        queue[++tail%capacity] = element;  
+        queue[++tail%capacity] = element;
     }
 
     public T dequeue(){
