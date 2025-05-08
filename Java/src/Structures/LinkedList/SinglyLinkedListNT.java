@@ -85,6 +85,18 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
+    public Node<T> fetch(T key) { // O(n)
+        if(isEmpty())
+            throw new NoSuchElementException("Empty Linkedlist");
+        
+        Node<T> iter = head;
+        for (; !iter.element.equals(key); iter = iter.next)
+            if (iter.next == null)
+                throw new NoSuchElementException(key + " not found");
+        return iter;
+    }
+
+    @Override
     public void erase(T key) { // O(n)
         if(isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
@@ -110,36 +122,25 @@ public class SinglyLinkedListNT<T> implements LinkedList<T>{
     }
 
     @Override
-    public void addBefore(T data, T key) { // O(n)
-
-        if(head.element.equals(key)){// si se debe insertar antes del primer elemento
+    public void addBefore(T data, Node<T> key) { // O(n)
+        if(head.equals(key)){// si se debe insertar antes del primer elemento
             pushFront(data);
             return;
         }
-        if (head.next == null) // si tiene solo un elemento pero no es el que se busca
-            throw new NoSuchElementException(key + " not found");
         
         Node<T> iter = head;
-        for (; !iter.next.element.equals(key); iter = iter.next) // si tiene mas de uno, osea head.next != null
-            if(iter.next.next == null)
-                throw new NoSuchElementException(key + " not found");
-        
-        // si se encontro
+        for (; !iter.next.equals(key); iter = iter.next); // si tiene mas de uno, osea head.next != null
+
         Node<T> node = new Node<>(data);
         node.next = iter.next;
         iter.next = node;
     }
 
     @Override
-    public void addAfter(T data, T key) { // O(n)
-        Node<T> iter = head;
-        for (; !iter.element.equals(key); iter = iter.next)
-            if(iter.next == null)
-                throw new NoSuchElementException(key + " not found");
-
+    public void addAfter(T data, Node<T> key) { // O(1)
         Node<T> node = new Node<>(data);
-        node.next = iter.next;
-        iter.next = node;
+        node.next = key.next;
+        key.next = node;
     }
     
     @Override

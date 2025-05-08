@@ -92,6 +92,18 @@ public class DoublyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
+    public Node<T> fetch(T key) { // O(n)
+        if(isEmpty())
+            throw new NoSuchElementException("Empty Linkedlist");
+        
+        Node<T> iter = head;
+        for (; !iter.element.equals(key); iter = iter.next)
+            if (iter.next == null)
+                throw new NoSuchElementException(key + " not found");
+        return iter;
+    }
+
+    @Override
     public void erase(T key) { //O(n)
         if(isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
@@ -123,50 +135,30 @@ public class DoublyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
-    public void addBefore(T data, T key) { //O(n)
-        if(isEmpty())
-            throw new NoSuchElementException("Empty Linkedlist");
-
-        Node<T> iter = head;
-        for (; !iter.element.equals(key); iter = iter.next)
-            if (iter.next == null)
-                throw new NoSuchElementException(key + " not found");
-        // iter es el elemento al que le queremos anadir antes
-
-        if(iter.equals(head)){ // si el que se busca es la cabeza
+    public void addBefore(T data, Node<T> key) { //O(1)
+        if(key.equals(head)){
             pushFront(data);
             return;
         }
 
         Node<T> node = new Node<>(data);
-        // se sabe que iter.prev != null porque si asi lo fuera, seria la cabeza y ya se abarco ese caso
-        node.next = iter;
-        node.prev = iter.prev;
-        iter.prev.next = node;
-        iter.prev = node;
+        node.next = key;
+        node.prev = key.prev;
+        key.prev.next = node;
+        key.prev = node;
     }
 
     @Override
-    public void addAfter(T data, T key) { //O(n)
-        if(isEmpty())
-            throw new NoSuchElementException("Empty Linkedlist");
-        
-        if (tail.element.equals(key)){ // es solo en un caso especial xd
+    public void addAfter(T data, Node<T> key) { //O(1)
+        if (key.equals(tail)){
             pushBack(data);
             return;
         }
-
-        Node<T> iter = head;
-        for(; !iter.element.equals(key); iter = iter.next)
-            if (iter.next == null)
-                throw new NoSuchElementException(key + " not found");
-
         Node<T> node = new Node<>(data);
-        // se sabe que iter.next != null porque si asi lo fuera, seria la cola y ya se abarco ese caso
-        node.next = iter.next;
-        node.prev = iter;
-        iter.next.prev = node;
-        iter.next = node;
+        node.next = key.next;
+        node.prev = key;
+        key.next.prev = node;
+        key.next = node;
     }
 
     @Override

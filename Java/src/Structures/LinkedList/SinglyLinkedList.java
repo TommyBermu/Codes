@@ -85,6 +85,18 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
+    public Node<T> fetch(T key) { // O(n)
+        if(isEmpty())
+            throw new NoSuchElementException("Empty Linkedlist");
+        
+        Node<T> iter = head;
+        for (; !iter.element.equals(key); iter = iter.next)
+            if (iter.next == null)
+                throw new NoSuchElementException(key + " not found");
+        return iter;
+    }
+
+    @Override
     public void erase(T key) { //O(n)
         if (isEmpty())
             throw new NoSuchElementException("Empty Linkedlist");
@@ -117,24 +129,15 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
-    public void addBefore(T data, T key) { //O(n)
-        if (isEmpty())
-            throw new NoSuchElementException("Empty Linkedlist");
-        
-        if (head.element.equals(key)){
+    public void addBefore(T data, Node<T> key) { // O(n)
+        if (head.equals(key)){
             pushFront(data);
             return;
         }
-
-        // si solo tiene un elemento
-        if (head.next == null)
-            throw new NoSuchElementException(key + " not found");
         
         // si tiene mas de un elemento
         Node<T> iter = head;
-        for (; !iter.next.element.equals(key); iter = iter.next)
-            if (iter.next.next == null)
-                throw new NoSuchElementException(key + " not found");
+        for (; !iter.next.equals(key); iter = iter.next);
 
         Node<T> node = new Node<>(data);
         node.next = iter.next;
@@ -142,23 +145,15 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
-    public void addAfter(T data, T key) { //O(n)
-        if (isEmpty())
-            throw new NoSuchElementException("Empty Linkedlist");
-        
-        if (tail.element.equals(key)){
+    public void addAfter(T data, Node<T> key) { // O(1)
+        if (tail.equals(key)){
             pushBack(data);
             return;
         }
         
-        Node<T> iter = head;
-        for (; !iter.element.equals(key); iter = iter.next)
-            if (iter.next == null)
-                throw new NoSuchElementException(key + " not found");
-        
         Node<T> node = new Node<>(data);
-        node.next = iter.next;
-        iter.next = node;
+        node.next = key.next;
+        key.next = node;
     }
 
     @Override

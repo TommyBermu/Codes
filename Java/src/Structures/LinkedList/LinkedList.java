@@ -32,11 +32,13 @@ public interface LinkedList<T> {
 
     public boolean find(T key);
 
+    public Node<T> fetch(T key);
+
     public void erase(T key);
 
     public boolean isEmpty();
 
-    public void addBefore(T data, T key);
+    public void addBefore(T data, Node<T> key);
 
-    public void addAfter(T data, T key);
+    public void addAfter(T data, Node<T> key);
 }

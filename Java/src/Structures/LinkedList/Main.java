@@ -1,8 +1,9 @@
 package Structures.LinkedList;
+import Structures.LinkedList.LinkedList.Node;
 
 public class Main {
     public static void main(String[] args) {
-        final int start = 10;
+        final int start = 100;
         final int end = 100000000; // 10^8
         
         for (int size = start; size <= end; size *= 10)
@@ -26,6 +27,7 @@ public class Main {
 
     /**** exec con sobrecarga de metodos ****/
 
+    // metodo que no recibe argumentos
     public static void exec(int size, String method, Operation metodo) {
         long start = System.nanoTime();
 
@@ -36,6 +38,7 @@ public class Main {
         System.out.printf("\nSe ejecutó %s de %d elementos en: %.4f milisegundos\n", method, size, timeElapsed);
     }
 
+    // metodo que recibe un argumento
     public static void exec(int size, String method, OperationV<Integer> metodo, Integer value) {
         long start = System.nanoTime();
 
@@ -46,7 +49,8 @@ public class Main {
         System.out.printf("\nSe ejecutó %s de %d elementos en: %.4f milisegundos\n", method, size, timeElapsed);
     }
 
-    public static void exec(int size, String method, OperationD<Integer> metodo, Integer value, Integer key) {
+    // metodo que recibe dos argumentos
+    public static void exec(int size, String method, OperationD<Integer> metodo, Integer value, Node<Integer> key) {
         long start = System.nanoTime();
 
         metodo.apply(value, key); // ejecuto con los datos
