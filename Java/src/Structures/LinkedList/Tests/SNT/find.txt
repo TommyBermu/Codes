@@ -1,0 +1,22 @@
+find: size/2
+
+Se ejecutó find de 100 elementos en: 0,0135 milisegundos
+Memoria Usada:  2,4  MB
+
+Se ejecutó find de 1000 elementos en: 0,0251 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó find de 10000 elementos en: 0,1769 milisegundos
+Memoria Usada:  2,2  MB
+
+Se ejecutó find de 100000 elementos en: 0,4649 milisegundos
+Memoria Usada:  5,0  MB
+
+Se ejecutó find de 1000000 elementos en: 1,7022 milisegundos
+Memoria Usada:  40,0  MB
+
+Se ejecutó find de 10000000 elementos en: 15,0730 milisegundos
+Memoria Usada:  396,2  MB
+
+Se ejecutó find de 100000000 elementos en: 135,8221 milisegundos
+Memoria Usada:  3897,0  MB

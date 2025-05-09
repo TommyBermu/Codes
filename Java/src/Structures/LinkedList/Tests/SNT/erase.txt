@@ -1,0 +1,22 @@
+erase: size/2
+
+Se ejecutó erase de 100 elementos en: 0,0208 milisegundos
+Memoria Usada:  2,4  MB
+
+Se ejecutó erase de 1000 elementos en: 0,0274 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó erase de 10000 elementos en: 0,1725 milisegundos
+Memoria Usada:  2,2  MB
+
+Se ejecutó erase de 100000 elementos en: 0,4931 milisegundos
+Memoria Usada:  5,0  MB
+
+Se ejecutó erase de 1000000 elementos en: 1,6053 milisegundos
+Memoria Usada:  40,0  MB
+
+Se ejecutó erase de 10000000 elementos en: 15,0487 milisegundos
+Memoria Usada:  394,9  MB
+
+Se ejecutó erase de 100000000 elementos en: 139,7952 milisegundos
+Memoria Usada:  3900,4  MB

@@ -1,0 +1,22 @@
+push: 777
+
+Se ejecutó popFront de 100 elementos en: 0,0059 milisegundos
+Memoria Usada:  2,4  MB
+
+Se ejecutó popFront de 1000 elementos en: 0,0059 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó popFront de 10000 elementos en: 0,0067 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó popFront de 100000 elementos en: 0,0177 milisegundos
+Memoria Usada:  5,0  MB
+
+Se ejecutó popFront de 1000000 elementos en: 0,0215 milisegundos
+Memoria Usada:  40,0  MB
+
+Se ejecutó popFront de 10000000 elementos en: 0,0202 milisegundos
+Memoria Usada:  394,7  MB
+
+Se ejecutó popFront de 100000000 elementos en: 0,0222 milisegundos
+Memoria Usada:  3897,7  MB

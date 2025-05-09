@@ -1,4 +1,4 @@
-package Structures.LinkedList;
+package Structures.LinkedList.Tests;
 
 import Structures.LinkedList.LinkedList.Node;
 

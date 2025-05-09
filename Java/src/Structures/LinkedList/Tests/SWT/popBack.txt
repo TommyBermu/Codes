@@ -1,0 +1,21 @@
+
+Se ejecutó popBack de 100 elementos en: 0,0068 milisegundos
+Memoria Usada:  2,4  MB
+
+Se ejecutó popBack de 1000 elementos en: 0,0197 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó popBack de 10000 elementos en: 0,1042 milisegundos
+Memoria Usada:  2,2  MB
+
+Se ejecutó popBack de 100000 elementos en: 0,4291 milisegundos
+Memoria Usada:  5,0  MB
+
+Se ejecutó popBack de 1000000 elementos en: 3,8192 milisegundos
+Memoria Usada:  40,0  MB
+
+Se ejecutó popBack de 10000000 elementos en: 27,8716 milisegundos
+Memoria Usada:  395,2  MB
+
+Se ejecutó popBack de 100000000 elementos en: 317,8169 milisegundos
+Memoria Usada:  3897,5  MB

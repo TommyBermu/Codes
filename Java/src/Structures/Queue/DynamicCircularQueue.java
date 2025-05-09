@@ -1,5 +1,7 @@
 package Structures.Queue;
 
+//TODO esta estructura no está testeada xd
+
 public class DynamicCircularQueue<T> {
     private int capacity;
     private int head, tail;

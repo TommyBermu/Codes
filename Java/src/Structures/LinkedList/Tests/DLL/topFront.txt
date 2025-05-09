@@ -1,0 +1,21 @@
+
+Se ejecutó topFront de 100 elementos en: 0,0052 milisegundos
+Memoria Usada:  2,4  MB
+
+Se ejecutó topFront de 1000 elementos en: 0,0057 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó topFront de 10000 elementos en: 0,0069 milisegundos
+Memoria Usada:  2,2  MB
+
+Se ejecutó topFront de 100000 elementos en: 0,0139 milisegundos
+Memoria Usada:  5,0  MB
+
+Se ejecutó topFront de 1000000 elementos en: 0,0183 milisegundos
+Memoria Usada:  40,0  MB
+
+Se ejecutó topFront de 10000000 elementos en: 0,0225 milisegundos
+Memoria Usada:  404,9  MB
+
+Se ejecutó topFront de 100000000 elementos en: 0,0242 milisegundos
+Memoria Usada:  3944,9  MB

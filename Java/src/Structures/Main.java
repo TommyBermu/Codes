@@ -9,7 +9,7 @@ import Structures.Queue.*;
 import Structures.Stack.Stack;
 
 @SuppressWarnings("unused")
-public class Test {
+public class Main {
     public static void main(String[] args) {
         try {
             Scanner sc = new Scanner(System.in);

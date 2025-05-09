@@ -1,0 +1,22 @@
+push: 777
+
+Se ejecutó pushBack de 100 elementos en: 0,0064 milisegundos
+Memoria Usada:  2,4  MB
+
+Se ejecutó pushBack de 1000 elementos en: 0,0109 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó pushBack de 10000 elementos en: 0,0087 milisegundos
+Memoria Usada:  2,0  MB
+
+Se ejecutó pushBack de 100000 elementos en: 0,0121 milisegundos
+Memoria Usada:  5,0  MB
+
+Se ejecutó pushBack de 1000000 elementos en: 0,0209 milisegundos
+Memoria Usada:  40,0  MB
+
+Se ejecutó pushBack de 10000000 elementos en: 0,0260 milisegundos
+Memoria Usada:  394,9  MB
+
+Se ejecutó pushBack de 100000000 elementos en: 0,0246 milisegundos
+Memoria Usada:  3898,2  MB
