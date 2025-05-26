@@ -10,27 +10,31 @@ import java.io.PrintWriter;
 public class Test {
     public static void main(String[] args) {
         try {
-            final int start = 100;
+            final int start = 100; // 10^2
             final int end = 100000000; // 10^8
-            final int tests = 6;
+            final int tests = 6; // cantidad de pruebas a promediar
 
             /**************************/
             String method = "pushFront";
             /**************************/
 
-            PrintWriter salida = new PrintWriter(new FileWriter("./Java/src/Structures/LinkedList/DLL/" + method + ".txt"));
+            PrintWriter salida = new PrintWriter(new FileWriter("./Java/src/Structures/LinkedList/" + method + ".txt"));
             double[] cpu = new double[tests];
             double[] ram = new double[tests];
             
             for (int size = start; size <= end; size *= 10){
 
                 for (int i = 0; i < tests; i++){ // se hace {tests} veces por cada tamaño de datos para luego sacar promedio
-                    DoublyLinkedList<Integer> lista = new DoublyLinkedList<>();
+
+                    /*************************************************************/
+                    SinglyLinkedListNT<Integer> lista = new SinglyLinkedListNT<>();
+                    /*************************************************************/
+
                     for (int j = 0; j < size; j++) // se crea la lista de {size} datos
                         lista.pushFront(j);
                     
                     /*************************************************************************/
-                    double timeElapsed = exec(lista::pushFront, 777);
+                    double timeElapsed = exec(lista::addBefore,777, lista.fetch(size/2));
                     /*************************************************************************/
 
                     Runtime runtime = Runtime.getRuntime();

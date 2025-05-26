@@ -1,14 +1,7 @@
-package Structures;
+package Structures.LinkedList;
 
 import java.util.Scanner;
 
-import Structures.LinkedList.DoublyLinkedList;
-import Structures.LinkedList.SinglyLinkedList;
-import Structures.LinkedList.SinglyLinkedListNT;
-import Structures.Queue.*;
-import Structures.Stack.Stack;
-
-@SuppressWarnings("unused")
 public class Main {
     public static void main(String[] args) {
         try {
