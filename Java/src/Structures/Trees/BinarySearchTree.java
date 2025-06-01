@@ -10,6 +10,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         public T data;
         public Node<T> left, right, parent;
+        int height; // Height of the node for AVL purposes
 
         /**
          * Node constructor
@@ -19,6 +20,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         public Node(T data, Node<T> parent) {
             this.data = data;
             this.parent = parent;
+            this.height = 1; // New nodes are initially added at leaf
         }
 
         @Override
@@ -34,14 +36,38 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     private Node<T> root;
 
+    /**
+     * Get the root node of the tree
+     * 
+     * @return root node
+     */
     public Node<T> getRoot() {
         return root;
+    }
+
+    /**
+     * Get the height of a node
+     * 
+     * @param node node to get height
+     * @return height of the node
+     */
+    public int getHeight(Node<T> node) {
+        return node == null ? 0 : Math.max(getHeight(node.left), getHeight(node.right)) + 1;
     }
 
     /**
      * Constructor (Empty)
      */
     public BinarySearchTree() {
+    }
+
+    /**
+     * Constructor (T data)
+     * 
+     * @param data data to insert as root
+     */
+    public BinarySearchTree(T data) {
+        insert(data);
     }
 
     /**
@@ -60,7 +86,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param data data to create the child
      * @return updated node
      */
-    private Node<T> insertBST(Node<T> node, T data, Node<T> parent) {
+    protected Node<T> insertBST(Node<T> node, T data, Node<T> parent) {
         if (node == null) {
             System.out.println("Se ha insertado: " + data);
             return new Node<T>(data, parent);
@@ -68,8 +94,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
         if (node.data.compareTo(data) > 0)
             node.left = insertBST(node.left, data, node);
+
         else if (node.data.compareTo(data) < 0)
             node.right = insertBST(node.right, data, node);
+
         else
             System.out.println("El valor " + data.toString() + " ya existe en el arbol");
 
@@ -92,7 +120,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param data data to remove
      * @return updated node
      */
-    private Node<T> removeBST(Node<T> node, T data) {
+    protected Node<T> removeBST(Node<T> node, T data) {
         if (node == null) {
             System.out.println("Item not in Tree and not removed");
             return node;
@@ -160,11 +188,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public Node<T> next(Node<T> node) {
         if (node == null)
             return null;
-        // If right subtree exists, return the minimum of the right subtree
-        if (node.right != null) {
-            return findMin(node.right);
-        } else
-            return findAncestor(node);
+        
+        return node.right != null ? findMin(node.right) : findAncestor(node);
     }
 
     /**
@@ -177,14 +202,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if (node == null)
             return null;
         // If right subtree exists, return the minimum of the right subtree
-        if (node.left != null) {
-            return findMax(node.left);
-        } else
-            return findPredecessor(node);
+        return node.left != null ? findMax(node.left) : findPredecessor(node);
     }
 
-    public void nearestNeighbors(T data){
-
+    /**
+     * Nearest neighbors search
+     * 
+     * @param data data to search nearest neighbors
+     */
+    public void nearestNeighbors(T data) {
+        // TODO Implement nearest neighbors search
     }
 
     /**
@@ -200,11 +227,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
         while (node != null) {
             if (node.data.compareTo(max) > 0)
-                break; // Stop if we exceed max
+                break;
 
-            if (node.data.compareTo(min) >= 0) // Add node if within range
+            if (node.data.compareTo(min) >= 0)
                 result.add(node);
-            // Move to the next node
+
             node = next(node);
         }
         return result;
