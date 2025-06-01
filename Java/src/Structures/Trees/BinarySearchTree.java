@@ -1,121 +1,315 @@
 package Structures.Trees;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Tomas Bermudez
  */
 public class BinarySearchTree<T extends Comparable<T>> {
-    public static class Node<T extends Comparable<T>> implements Comparable<Node<T>>{
+    public static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         public T data;
-        public Node<T> left, right;
+        public Node<T> left, right, parent;
 
-        public Node(T data){
+        /**
+         * Node constructor
+         * 
+         * @param data data to store in the node
+         */
+        public Node(T data, Node<T> parent) {
             this.data = data;
+            this.parent = parent;
         }
 
         @Override
         public int compareTo(Node<T> o) {
             return this.data.compareTo(o.data);
         }
+
+        @Override
+        public String toString() {
+            return data.toString();
+        }
     }
 
-    public Node<T> root;
+    private Node<T> root;
 
-    public BinarySearchTree(){}
+    public Node<T> getRoot() {
+        return root;
+    }
 
     /**
-     * @param data data to insert 
+     * Constructor (Empty)
      */
-    public void insert(T data){
-        root = insertBST(root, data);
+    public BinarySearchTree() {
     }
 
     /**
-     * @param node node to which we want to make a child 
+     * Insert a new node into the tree
+     * 
+     * @param data data to insert
+     */
+    public void insert(T data) {
+        root = insertBST(root, data, null);
+    }
+
+    /**
+     * Insert a new node into the tree
+     * 
+     * @param node node to which we want to make a child
      * @param data data to create the child
+     * @return updated node
      */
-    private Node<T> insertBST(Node<T> node, T data){
-        if (node == null){
+    private Node<T> insertBST(Node<T> node, T data, Node<T> parent) {
+        if (node == null) {
             System.out.println("Se ha insertado: " + data);
-            return new Node<T>(data);
+            return new Node<T>(data, parent);
         }
 
         if (node.data.compareTo(data) > 0)
-            node.left = insertBST(node.left, data);
+            node.left = insertBST(node.left, data, node);
         else if (node.data.compareTo(data) < 0)
-            node.right = insertBST(node.right, data);
+            node.right = insertBST(node.right, data, node);
         else
             System.out.println("El valor " + data.toString() + " ya existe en el arbol");
 
         return node;
     }
 
-    public void remove(T data){
+    /**
+     * Remove a node from the tree
+     * 
+     * @param data data to remove
+     */
+    public void remove(T data) {
         root = removeBST(root, data);
     }
-    
+
     /**
-     * @param node 
-     * @param data
-     * @return 
+     * Remove a node from the tree
+     * 
+     * @param node node to remove
+     * @param data data to remove
+     * @return updated node
      */
-    private Node<T> removeBST(Node<T> node, T data){
+    private Node<T> removeBST(Node<T> node, T data) {
         if (node == null) {
             System.out.println("Item not in Tree and not removed");
             return node;
         }
 
+        /** Para encontrar el nodo **/
         if (node.data.compareTo(data) > 0)
             node.left = removeBST(node.left, data);
 
         else if (node.data.compareTo(data) < 0)
-             node.right = removeBST(node.right, data);
+            node.right = removeBST(node.right, data);
 
-        else if (node.left != null && node.right != null)
+        /** Cuando ya encontramos el nodo **/
+        else if (node.left == null && node.right == null) { // no children (leaf)
             return null;
 
-        else if (node.left == null)
+        } else if (node.left == null) { // if only has right child
+            node.right.parent = node.parent;
             return node.right;
 
-        else if (node.right == null)
+        } else if (node.right == null) { // if only has left child
+            node.left.parent = node.parent;
             return node.left;
 
-        else
-            node.right = removeBST(node.right, findMin(node.right).data);
-
+        } else { // if has both children
+            node.data = findMin(node.right).data;
+            node.right = removeBST(node.right, node.data);
+        }
         return node;
     }
 
-    private Node<T> findMin(Node<T> node){
-        if(node != null)
-            while (node.left != null)
-                node = node.left;
-        
-        return node;        
+    /**
+     * Fetch a node by its data
+     * 
+     * @param data data to fetch
+     * @return fetched node
+     */
+    public Node<T> fetch(T data) {
+        return fetchBST(root, data);
     }
 
-    private Node<T> findMax(Node<T> node){
-        if(node != null)
-            while (node.right != null)
-                node = node.right;
-        
-        return node;        
+    /**
+     * Fetch a node by its data
+     * 
+     * @param node node to search
+     * @param data data to fetch
+     * @return fetched node
+     */
+    private Node<T> fetchBST(Node<T> node, T data) {
+        if (node == null || data.compareTo(node.data) == 0)
+            return node;
+
+        if (data.compareTo(node.data) < 0)
+            return fetchBST(node.left, data);
+        else
+            return fetchBST(node.right, data);
     }
-    
-    public void recorrer(){ // InOrder
+
+    /**
+     * Find the next node in the BST
+     * 
+     * @param data data to find next node
+     * @return next node
+     */
+    public Node<T> next(Node<T> node) {
+        if (node == null)
+            return null;
+        // If right subtree exists, return the minimum of the right subtree
+        if (node.right != null) {
+            return findMin(node.right);
+        } else
+            return findAncestor(node);
+    }
+
+    /**
+     * Find the previous node in the BST
+     * 
+     * @param node data to find previous node
+     * @return previous node
+     */
+    public Node<T> prev(Node<T> node) {
+        if (node == null)
+            return null;
+        // If right subtree exists, return the minimum of the right subtree
+        if (node.left != null) {
+            return findMax(node.left);
+        } else
+            return findPredecessor(node);
+    }
+
+    public void nearestNeighbors(T data){
+
+    }
+
+    /**
+     * Range search
+     * 
+     * @param min min value
+     * @param max max value
+     * @return list of nodes within the range
+     */
+    public List<Node<T>> rangeSearch(T min, T max) {
+        Node<T> node = findMin(root);
+        List<Node<T>> result = new ArrayList<>();
+
+        while (node != null) {
+            if (node.data.compareTo(max) > 0)
+                break; // Stop if we exceed max
+
+            if (node.data.compareTo(min) >= 0) // Add node if within range
+                result.add(node);
+            // Move to the next node
+            node = next(node);
+        }
+        return result;
+    }
+
+    /**
+     * find the minimum node in the tree
+     * 
+     * @param node node to find minimum
+     * @return minimum node
+     */
+    public Node<T> findMin(Node<T> node) {
+        while (node != null && node.left != null)
+            node = node.left;
+        return node;
+    }
+
+    /**
+     * find the maximum node in the tree
+     * 
+     * @param node node to find maximum
+     * @return maximum node
+     */
+    public Node<T> findMax(Node<T> node) {
+        while (node != null && node.right != null)
+            node = node.right;
+        return node;
+    }
+
+    /**
+     * find the immediate ancestor of a node
+     * 
+     * @param node node to find ancestor
+     * @return ancestor node
+     */
+    public Node<T> findAncestor(Node<T> node) {
+        if (node.parent != null && node.data.compareTo(node.parent.data) > 0)
+            return findAncestor(node.parent);
+        return node.parent;
+    }
+
+    /**
+     * find the immediate predecessor of a node
+     * 
+     * @param node
+     * @return
+     */
+    public Node<T> findPredecessor(Node<T> node) {
+        if (node.parent != null && node.data.compareTo(node.parent.data) < 0)
+            return findPredecessor(node.parent);
+        return node.parent;
+    }
+
+    /**
+     * InOrder Traversal
+     */
+    public void inOrderTraversal() { // InOrder
         System.out.println("Tree is: ");
         if (root != null)
-            recorrerBST(root);
+            TraversalBST(root, 2);
         else
             System.out.println("Empty");
         System.out.println("Fin \n");
     }
 
-    private void recorrerBST(Node<T> node){
-        if(node.left != null)
-            recorrerBST(node.left);
-        System.out.println(node.data);
-        if(node.right != null)
-            recorrerBST(node.right);
+    /**
+     * PreOrder Traversal
+     */
+    public void preOrderTraversal() { // InOrder
+        System.out.println("Tree is: ");
+        if (root != null)
+            TraversalBST(root, 1);
+        else
+            System.out.println("Empty");
+        System.out.println("Fin \n");
+    }
+
+    /**
+     * PostOrder Traversal
+     */
+    public void postOrderTraversal() { // InOrder
+        System.out.println("Tree is: ");
+        if (root != null)
+            TraversalBST(root, 3);
+        else
+            System.out.println("Empty");
+        System.out.println("Fin \n");
+    }
+
+    /**
+     * Traversal BST
+     * 
+     * @param node node to traverse
+     * @param type traversal type (1: PreOrder, 2: InOrder, 3: PostOrder)
+     */
+    private void TraversalBST(Node<T> node, int type) {
+        if (type == 1)
+            System.out.println(node.data);
+        if (node.left != null)
+            TraversalBST(node.left, type);
+        if (type == 2)
+            System.out.println(node.data);
+        if (node.right != null)
+            TraversalBST(node.right, type);
+        if (type == 3)
+            System.out.println(node.data);
     }
 }
-
