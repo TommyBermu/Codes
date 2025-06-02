@@ -10,7 +10,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         public T data;
         public Node<T> left, right, parent;
-        int height; // Height of the node for AVL purposes
+        int height;
 
         /**
          * Node constructor
@@ -30,11 +30,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
         @Override
         public String toString() {
-            return data.toString();
+            return data.toString() + "(" + height + ")";
         }
     }
 
-    private Node<T> root;
+    /**
+     * Root of the tree
+     */
+    protected Node<T> root;
 
     /**
      * Get the root node of the tree
@@ -43,16 +46,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
     public Node<T> getRoot() {
         return root;
-    }
-
-    /**
-     * Get the height of a node
-     * 
-     * @param node node to get height
-     * @return height of the node
-     */
-    public int getHeight(Node<T> node) {
-        return node == null ? 0 : Math.max(getHeight(node.left), getHeight(node.right)) + 1;
     }
 
     /**
@@ -77,6 +70,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
     public void insert(T data) {
         root = insertBST(root, data, null);
+        printTree();
     }
 
     /**
@@ -98,9 +92,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
         else if (node.data.compareTo(data) < 0)
             node.right = insertBST(node.right, data, node);
 
-        else
+        else {
             System.out.println("El valor " + data.toString() + " ya existe en el arbol");
+            return node;
+        }
 
+        updateHeight(node);
         return node;
     }
 
@@ -149,7 +146,26 @@ public class BinarySearchTree<T extends Comparable<T>> {
             node.data = findMin(node.right).data;
             node.right = removeBST(node.right, node.data);
         }
+        updateHeight(node);
         return node;
+    }
+
+    /**
+     * Get the height of a node
+     * 
+     * @param node node to get height
+     * @return height of the node
+     */
+    public int getHeight(Node<T> node) {
+        return node == null ? 0 : node.height;
+    }
+
+    /**
+     * Update the height of a node
+     * @param node node to update height
+     */
+    public void updateHeight(Node<T> node){
+        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
     }
 
     /**
@@ -276,8 +292,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
     /**
      * find the immediate predecessor of a node
      * 
-     * @param node
-     * @return
+     * @param node node to find predecessor
+     * @return predecessor node
      */
     public Node<T> findPredecessor(Node<T> node) {
         if (node.parent != null && node.data.compareTo(node.parent.data) < 0)
@@ -338,5 +354,45 @@ public class BinarySearchTree<T extends Comparable<T>> {
             TraversalBST(node.right, type);
         if (type == 3)
             System.out.println(node.data);
+    }
+
+    /**
+     * Print the tree in a better format
+     */
+    public void printTree() {
+        System.out.println("\n=== Horizontal tree ===\n");
+        if (root == null) {
+            System.out.println("(vacío)");
+            return;
+        }
+        printTreeBST(root, "", true, false);
+    }
+
+    /**
+     * The recursive method to print the tree
+     */
+    private void printTreeBST(Node<T> node, String prefix, boolean isRoot, boolean isLeft) {
+        if (node == null) return;
+        
+        // Primero procesamos el hijo derecho (va hacia arriba)
+        if (node.right != null) {
+            printTreeBST(node.right, 
+                prefix + (isRoot ? "" : (isLeft ? "│   " : "    ")), 
+                false, false);
+        }
+        
+        // Luego imprimimos el nodo actual
+        if (isRoot) {
+            System.out.println(prefix + node);
+        } else {
+            System.out.println(prefix + (isLeft ? "└── " : "┌── ") + node);
+        }
+        
+        // Finalmente procesamos el hijo izquierdo (va hacia abajo)
+        if (node.left != null) {
+            printTreeBST(node.left, 
+                prefix + (isRoot ? "" : (isLeft ? "    " : "│   ")), 
+                false, true);
+        }
     }
 }
