@@ -70,7 +70,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
     public void insert(T data) {
         root = insertBST(root, data, null);
-        printTree();
     }
 
     /**
@@ -81,10 +80,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @return updated node
      */
     protected Node<T> insertBST(Node<T> node, T data, Node<T> parent) {
-        if (node == null) {
-            System.out.println("Se ha insertado: " + data);
+        if (node == null) 
             return new Node<T>(data, parent);
-        }
 
         if (node.data.compareTo(data) > 0)
             node.left = insertBST(node.left, data, node);
@@ -227,7 +224,23 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param data data to search nearest neighbors
      */
     public void nearestNeighbors(T data) {
-        // TODO Implement nearest neighbors search
+        /* TODO ver como hacer esto xd
+        Node<T> predecesor, sucesor;
+        Node<T> node = root;
+
+        while (node != null) {
+            if (data.compareTo(node.data) < 0) {
+                sucesor = node;
+                node = node.left;
+            } else if (data.compareTo(node.data) > 0) {
+                predecesor = node;
+                node = node.right;
+            } else {
+                predecesor = prev(node);
+                sucesor = next(node);
+                break;
+            }
+        }*/
     }
 
     /**
