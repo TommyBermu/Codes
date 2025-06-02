@@ -1,6 +1,6 @@
 package Structures.LinkedList;
 
-public interface LinkedList<T> {
+public interface LinkedList<T> extends Iterable<T> {
     static class Node<T> {
         T element;
         Node<T> next;

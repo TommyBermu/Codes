@@ -1,5 +1,6 @@
 package Structures.LinkedList;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class DoublyLinkedList<T> implements LinkedList<T> {
@@ -184,5 +185,26 @@ public class DoublyLinkedList<T> implements LinkedList<T> {
             }
         }
         return ret + "]";
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            Node<T> current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext())
+                    throw new NoSuchElementException("No more elements in the list");
+                T data = current.element;
+                current = current.next;
+                return data;
+            }
+        };
     }
 }
