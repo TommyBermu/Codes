@@ -1,21 +1,21 @@
 package Structures.Trees;
 
-public class AVL<T extends Comparable<T>> extends BinarySearchTree<T>{
+public class AVL<T extends Comparable<T>> extends BST<T>{
 
     /**
      * Inserts a new node with the given data into the AVL tree.
-     * This method overrides the insertBST method from BinarySearchTree
+     * This method overrides the insertRec method from BinarySearchTree
      */
     @Override
-    protected Node<T> insertBST(Node<T> node, T data, Node<T> parent) {
+    protected Node<T> insertRec(Node<T> node, T data, Node<T> parent) {
         if (node == null)
             return new Node<T>(data, parent);
         
         if (node.data.compareTo(data) > 0)
-            node.left = insertBST(node.left, data, node);
+            node.left = insertRec(node.left, data, node);
 
         else if (node.data.compareTo(data) < 0)
-            node.right = insertBST(node.right, data, node);
+            node.right = insertRec(node.right, data, node);
 
         else {
             System.out.println("El valor " + data.toString() + " ya existe en el arbol");
@@ -29,10 +29,10 @@ public class AVL<T extends Comparable<T>> extends BinarySearchTree<T>{
 
     /**
      * Removes a node with the given data from the AVL tree.
-     * This method overrides the removeBST method from BinarySearchTree.
+     * This method overrides the removeRec method from BinarySearchTree.
      */
     @Override
-    public Node<T> removeBST(Node<T> node, T data) {
+    public Node<T> removeRec(Node<T> node, T data) {
         if (node == null) {
             System.out.println("Item not in Tree and not removed");
             return node;
@@ -40,10 +40,10 @@ public class AVL<T extends Comparable<T>> extends BinarySearchTree<T>{
 
         /** Para encontrar el nodo **/
         if (node.data.compareTo(data) > 0)
-            node.left = removeBST(node.left, data);
+            node.left = removeRec(node.left, data);
 
         else if (node.data.compareTo(data) < 0)
-            node.right = removeBST(node.right, data);
+            node.right = removeRec(node.right, data);
 
         /** Cuando ya encontramos el nodo **/
         else if (node.left == null && node.right == null) { // no children (leaf)
@@ -59,7 +59,7 @@ public class AVL<T extends Comparable<T>> extends BinarySearchTree<T>{
 
         } else { // if has both children
             node.data = findMin(node.right).data;
-            node.right = removeBST(node.right, node.data);
+            node.right = removeRec(node.right, node.data);
         }
 
         updateHeight(node);
@@ -73,7 +73,7 @@ public class AVL<T extends Comparable<T>> extends BinarySearchTree<T>{
      * @return the height of the node
      */
     public int getBalance(Node<T> node){
-        return node != null ? getHeight(node.left) - getHeight(node.right) : 0;
+        return node != null ? getHeight(node.left) - getHeight(node.right) : 0; 
     }
 
     /**
