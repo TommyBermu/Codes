@@ -20,22 +20,19 @@ public class SimpleQueue<T> {
     }
 
     public T dequeue(){
-        if (!isEmpty()){
-            T ret = queue[0];
-            for (int i = 0; i < top; i++)
-                queue[i] = queue[i+1];
-            top--;
-            return ret;
-        }
-        else
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Queue is empty");
+        T ret = queue[0];
+        for (int i = 0; i < top; i++)
+            queue[i] = queue[i+1];
+        top--;
+        return ret;
     }
 
     public T front(){
-        if (!isEmpty())
-            return queue[0];
-        else
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Queue is empty");
+        return queue[0];
     }
 
     public boolean isEmpty(){

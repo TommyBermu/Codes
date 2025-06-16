@@ -13,24 +13,22 @@ public class Stack<T> {
     }
 
     public void push(T elemento){
-        if (!isFull())
-            stack[++top] = elemento;
-        else
+        if (isFull())
             throw new ArrayIndexOutOfBoundsException("Stack is full");
+        stack[++top] = elemento;
+          
     }
 
     public T pop(){
-        if (!isEmpty())
-            return stack[top--];
-        else
-            throw new ArrayIndexOutOfBoundsException("Stack is empty");
+        if (isEmpty())
+            throw new ArrayIndexOutOfBoundsException("Stack is empty"); 
+        return stack[top--];
     }
 
     public T top(){
-        if (!isEmpty())
-            return stack[top];
-        else
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Stack is empty");
+        return stack[top];
     }
 
     public boolean isFull(){

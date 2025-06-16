@@ -15,15 +15,13 @@ public class CircularQueue<T> {
     public void enqueue(T element){
         if (isFull())
             throw new ArrayIndexOutOfBoundsException("Queue is full");
-
         queue[++tail%capacity] = element;
     }
 
     public T dequeue(){
-        if (!isEmpty())
-            return queue[++head%capacity];
-        else
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("Queue is empty");
+        return queue[++head%capacity];
     }
 
     public boolean isEmpty(){
