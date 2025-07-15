@@ -68,8 +68,17 @@ public class HashMap<K, V> implements Map<K, V> {
     
     @Override
     public V replace(K key, V value) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'replace'");
+        int idx = hash(key);
+        Node<K, V> curr = buckets[idx];
+        while (curr != null){
+            if (curr.key == key){
+                V val = curr.value;
+                curr.value = value;
+                return val;
+            }
+            curr = curr.next;
+        }
+        return null;
     }
 
     @Override
