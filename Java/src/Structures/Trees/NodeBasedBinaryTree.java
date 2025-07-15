@@ -7,17 +7,18 @@ public abstract class NodeBasedBinaryTree<T extends Comparable<T>> implements Tr
     protected static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         protected T data;
         protected Node<T> left, right, parent;
-        protected int height;
+        protected int height = 1;     //para el AVL
+        protected boolean red = true; // para red-black tree
 
         /**
          * Node constructor
          * 
          * @param data data to store in the node
+         * @param parent parent of the node
          */
         public Node(T data, Node<T> parent) {
             this.data = data;
             this.parent = parent;
-            this.height = 1;
         }
 
         @Override
@@ -27,7 +28,7 @@ public abstract class NodeBasedBinaryTree<T extends Comparable<T>> implements Tr
 
         @Override
         public String toString() {
-            return data.toString();
+            return data.toString() + "(" + (red ? "R" : "B") + ")";
         }
     }
 
@@ -53,6 +54,80 @@ public abstract class NodeBasedBinaryTree<T extends Comparable<T>> implements Tr
 
     @Override
     public abstract void remove(T element);
+
+    /**
+     * Find the next node (in value)in the BST
+     * 
+     * @param data data to find next node
+     * @return next node
+     */
+    public Node<T> next(Node<T> node) {
+        if (node == null)
+            return null;
+
+        return node.right != null ? findMin(node.right) : findAncestor(node);
+    }
+
+    /**
+     * Find the previous node (in value) in the BST
+     * 
+     * @param node data to find previous node
+     * @return previous node
+     */
+    public Node<T> prev(Node<T> node) {
+        if (node == null)
+            return null;
+        // If right subtree exists, return the minimum of the right subtree
+        return node.left != null ? findMax(node.left) : findPredecessor(node);
+    }
+
+    /**
+     * find the minimum node in the tree rooted at the given node
+     * 
+     * @param node node to find minimum
+     * @return minimum node
+     */
+    public Node<T> findMin(Node<T> node) {
+        while (node != null && node.left != null)
+            node = node.left;
+        return node;
+    }
+
+    /**
+     * find the maximum node in the tree rooted at the given node
+     * 
+     * @param node node to find maximum
+     * @return maximum node
+     */
+    public Node<T> findMax(Node<T> node) {
+        while (node != null && node.right != null)
+            node = node.right;
+        return node;
+    }
+
+    /**
+     * return the first parent node with a value greater than the given node's value
+     * 
+     * @param node node to find ancestor
+     * @return ancestor node
+     */
+    public Node<T> findAncestor(Node<T> node) {
+        if (node.parent != null && node.data.compareTo(node.parent.data) > 0)
+            return findAncestor(node.parent);
+        return node.parent;
+    }
+
+    /**
+     * returns the first parent node with a value less than the given node's value
+     * 
+     * @param node node to find predecessor
+     * @return predecessor node
+     */
+    public Node<T> findPredecessor(Node<T> node) {
+        if (node.parent != null && node.data.compareTo(node.parent.data) < 0)
+            return findPredecessor(node.parent);
+        return node.parent;
+    }
 
     /**
      * PreOrder Traversal

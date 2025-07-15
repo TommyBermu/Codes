@@ -14,7 +14,7 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
     }
 
     /**
-     * Constructor (T data)
+     * Constructor with data
      * 
      * @param data data to insert as root
      */
@@ -36,7 +36,7 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
      */
     protected Node<T> insertRec(Node<T> node, T data, Node<T> parent) {
         if (node == null)
-            return new Node<T>(data, parent);
+            return postInsert(new Node<T>(data, parent), data);
 
         if (node.data.compareTo(data) > 0)
             node.left = insertRec(node.left, data, node);
@@ -48,8 +48,19 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
             System.out.println("El valor " + data.toString() + " ya existe en el arbol");
             return node;
         }
+        return postInsert(node, data);
+    }
 
-        updateHeight(node);
+    /**
+     * Post-insert hook method to allow for additional operations after insertion
+     * This method can be overridden in subclasses to perform additional operations after a node has been inserted.
+     * 
+     * @param node  node that was just inserted
+     * @param data  data that was inserted
+     * @return updated node
+     */
+    protected Node<T> postInsert(Node<T> node, T data){
+        System.out.println("post insert bst");
         return node;
     }
 
@@ -84,37 +95,33 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
 
         } else if (node.left == null) { // if only has right child
             node.right.parent = node.parent;
-            return node.right;
+            node = node.right;
 
         } else if (node.right == null) { // if only has left child
             node.left.parent = node.parent;
-            return node.left;
+            node = node.left;
 
         } else { // if has both children
             node.data = findMin(node.right).data;
             node.right = removeRec(node.right, node.data);
+
+            // Alternatively, we could use the maximum of the left subtree
+            // node.data = findMax(node.left).data;
+            // node.left = removeRec(node.left, node.data);
         }
-        updateHeight(node);
+        return postDelete(node, data);
+    }
+
+    /**
+     * Post-delete hook method to allow for additional operations after deletion
+     * This method can be overridden in subclasses to perform additional operations after a node has been deleted.
+     *
+     * @param node  node that was just deleted
+     * @param data  data that was deleted
+     * @return updated node
+     */
+    protected Node<T> postDelete(Node<T> node, T data){
         return node;
-    }
-
-    /**
-     * Get the height of a node
-     * 
-     * @param node node to get height
-     * @return height of the node
-     */
-    public int getHeight(Node<T> node) {
-        return node == null ? 0 : node.height;
-    }
-
-    /**
-     * Update the height of a node
-     * 
-     * @param node node to update height
-     */
-    public void updateHeight(Node<T> node) {
-        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
     }
 
     @Override
@@ -170,32 +177,6 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
     }
 
     /**
-     * Find the next node in the BST
-     * 
-     * @param data data to find next node
-     * @return next node
-     */
-    public Node<T> next(Node<T> node) {
-        if (node == null)
-            return null;
-
-        return node.right != null ? findMin(node.right) : findAncestor(node);
-    }
-
-    /**
-     * Find the previous node in the BST
-     * 
-     * @param node data to find previous node
-     * @return previous node
-     */
-    public Node<T> prev(Node<T> node) {
-        if (node == null)
-            return null;
-        // If right subtree exists, return the minimum of the right subtree
-        return node.left != null ? findMax(node.left) : findPredecessor(node);
-    }
-
-    /**
      * Nearest neighbors search
      * 
      * @param data data to search nearest neighbors
@@ -243,53 +224,5 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
             node = next(node);
         }
         return result;
-    }
-
-    /**
-     * find the minimum node in the tree
-     * 
-     * @param node node to find minimum
-     * @return minimum node
-     */
-    public Node<T> findMin(Node<T> node) {
-        while (node != null && node.left != null)
-            node = node.left;
-        return node;
-    }
-
-    /**
-     * find the maximum node in the tree
-     * 
-     * @param node node to find maximum
-     * @return maximum node
-     */
-    public Node<T> findMax(Node<T> node) {
-        while (node != null && node.right != null)
-            node = node.right;
-        return node;
-    }
-
-    /**
-     * find the inmediate ancestor node (in value) of a given node
-     * 
-     * @param node node to find ancestor
-     * @return ancestor node
-     */
-    public Node<T> findAncestor(Node<T> node) {
-        if (node.parent != null && node.data.compareTo(node.parent.data) > 0)
-            return findAncestor(node.parent);
-        return node.parent;
-    }
-
-    /**
-     * find the inmediate predecessor node (in value) of a given node
-     * 
-     * @param node node to find predecessor
-     * @return predecessor node
-     */
-    public Node<T> findPredecessor(Node<T> node) {
-        if (node.parent != null && node.data.compareTo(node.parent.data) < 0)
-            return findPredecessor(node.parent);
-        return node.parent;
     }
 }
