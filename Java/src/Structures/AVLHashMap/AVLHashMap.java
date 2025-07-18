@@ -16,10 +16,11 @@ public class AVLHashMap<K, V extends Comparable<V>> {
          * @param data data to store in the node
          * @param parent parent of the node
          */
-        public Node(K key, V data, Node<K, V> parent) {
+        public Node(K key, V data, Node<K, V> parent, Node<K, V> next) {
             this.key = key;
             this.data = data;
             this.parent = parent;
+            this.next = next;
         }
 
         @Override
@@ -34,16 +35,21 @@ public class AVLHashMap<K, V extends Comparable<V>> {
     }
 
     private Node<K, V> root;
-    private Node<K, V>[] bucket;
+    private Node<K, V>[] buckets;
     private int size, capacity;
     private static final float LOAD_FACTOR = 0.75f;
 
     public AVLHashMap(){
         this.capacity = 16;
+        this.size = 0;
+        this.buckets = new Node[capacity];
     }
 
     public AVLHashMap(int capacity){
+        if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
         this.capacity = capacity;
+        this.size = 0;
+        this.buckets = new Node[capacity];
     }
 
     /**
@@ -53,32 +59,47 @@ public class AVLHashMap<K, V extends Comparable<V>> {
      * @return the value associated with the key, or null if the key does not exist
      */
     public V get(K key) {
-        int idx = hash(key);
-        Node<K, V> curr = bucket[idx];
+        Node<K, V> node = getNode(key);
+        return node == null ? null : node.data;
+    }
+
+    /**
+     * Retrieves the node associated with the specified key.
+     * 
+     * @param key the key whose associated value is to be returned
+     * @return the node associated with the key, or null if the key does not exist
+     */
+    public Node<K, V> getNode(K key) {
+        int idx = hash(key.hashCode());
+        Node<K, V> curr = buckets[idx];
         while (curr != null){
-            if (curr.key == key){
-                return curr.data;
+            if (curr.key.equals(key)){
+                return curr;
             }
+            curr = curr.next;
         }
         return null;
     }
 
-
-    public void insert(V data) { // TODO aca debe ser con K de la key xd
-        root = insertRec(root, data, null);
-    }
-
-    public boolean add(K key, V value) {
-        int idx = hash(key);
-        Node<K, V> curr = bucket[idx];
+    /**
+     * Inserts a key-value pair into the structure.
+     * 
+     * @param key the key to insert
+     * @param value the value to insert
+     * @return true if the insertion was successful, false if the key already exists
+     */
+    public boolean insert(K key, V value) {
+        Node<K, V> curr = buckets[hash(key.hashCode())];
         while (curr != null){
-            if (curr.key == key){
+            if (curr.key.equals(key)){
                 return false;
             }
             curr = curr.next;
         }
-        bucket[idx] = new Node<K, V>(key, value, bucket[idx]); // TODO se crearian dos nodos? ... xd
+        root = insertRec(root, value, null, key);
         size++;
+        if (size >= capacity * LOAD_FACTOR)
+            resize();
         return true;
     }
 
@@ -89,100 +110,210 @@ public class AVLHashMap<K, V extends Comparable<V>> {
      * @param data data to create the child
      * @return updated node
      */
-    protected Node<K, V> insertRec(Node<K, V> node, V data, Node<K, V> parent) {
-        //if (node == null)
-            //return postInsert(new Node<K, V>(data, parent), data);
+    protected Node<K, V> insertRec(Node<K, V> node, V data, Node<K, V> parent, K key) {
+        if (node == null)
+            return rebalance(buckets[hash(key.hashCode())] = 
+            new Node<K, V>(key, data, parent, buckets[hash(key.hashCode())]), data, true);
 
         if (node.data.compareTo(data) > 0)
-            node.left = insertRec(node.left, data, node);
+            node.left = insertRec(node.left, data, node, key);
 
         else if (node.data.compareTo(data) < 0)
-            node.right = insertRec(node.right, data, node);
+            node.right = insertRec(node.right, data, node, key);
 
         else {
             System.out.println("El valor " + data.toString() + " ya existe en el arbol");
             return node;
         }
-        return node;
+        return rebalance(node, data, true);
     }
     
-    public void remove(V data) { // TODO aca debe ser con K de la key xd
-        root = removeRec(root, data);
+    /**
+     * Removes a key from the structure, both from the hash map and the AVL tree.
+     * 
+     * @param key key to remove
+     */
+    public void remove(K key) {
+        Node<K, V> node = getNode(key);
+
+        if (node == null){
+            System.out.println("Item not in database and not removed");
+            return;
+        }
+
+        removeFromHashMap(key);
+        
+        removeFromAVL(node);
+        
+        size--;
     }
 
     /**
-     * Remove a node from the tree
+     * Removes a key from the hash map
      * 
-     * @param node node to remove
-     * @param data data to remove
-     * @return updated node
+     * @param key the key to remove
      */
-    protected Node<K, V> removeRec(Node<K, V> node, V data) {
-        if (node == null) {
-            System.out.println("Item not in Tree and not removed");
-            return node;
+    private void removeFromHashMap(K key) {
+        int idx = hash(key.hashCode());
+        Node<K, V> curr = buckets[idx];
+        Node<K, V> prev = null;
+        
+        while (curr != null) {
+            if (curr.key.equals(key)) {
+                if (prev == null) {
+                    buckets[idx] = curr.next; // Es el primer nodo del bucket
+                } else {
+                    prev.next = curr.next; // Es un nodo en el medio o final
+                }
+                return;
+            }
+            prev = curr;
+            curr = curr.next;
         }
-
-        /** Para encontrar el nodo **/
-        if (node.data.compareTo(data) > 0)
-            node.left = removeRec(node.left, data);
-
-        else if (node.data.compareTo(data) < 0)
-            node.right = removeRec(node.right, data);
-
-        /** Cuando ya encontramos el nodo **/
-        else if (node.left == null && node.right == null) { // no children (leaf)
-            return null;
-
-        } else if (node.left == null) { // if only has right child
-            node.right.parent = node.parent;
-            node = node.right;
-
-        } else if (node.right == null) { // if only has left child
-            node.left.parent = node.parent;
-            node = node.left;
-
-        } else { // if has both children
-            node.data = findMin(node.right).data;
-            node.right = removeRec(node.right, node.data);
-
-            // Alternatively, we could use the maximum of the left subtree
-            // node.data = findMax(node.left).data;
-            // node.left = removeRec(node.left, node.data);
-        }
-        return rebalance(node, data, false);
-    }
-    
-
-    /*******************************************/
-    /* ** metodos para la parte del HashMap ** */ // TODO solo es una referencia xd
-    /*******************************************/
-
-    private int hash(K key){
-        return (key.hashCode() & 0x7fffffff) % capacity;
     }
 
-        /**
+    /**
+     * TODO Removes a node from the AVL tree.
+     * 
+     * @param nodeToRemove the node to remove
+     * @return the updated root of the AVL tree
+     */
+    private void removeFromAVL(Node<K, V> nodeToRemove) {
+        // Caso 1: Sin hijos (hoja)
+        if (nodeToRemove.left == null && nodeToRemove.right == null) {
+            if (nodeToRemove.parent == null) {
+                // Es la raíz
+                root = null;
+            } else {
+                // Desconectar del padre
+                if (nodeToRemove.parent.left.equals(nodeToRemove)) {
+                    nodeToRemove.parent.left = null;
+                } else {
+                    nodeToRemove.parent.right = null;
+                }
+                // Rebalancear hacia arriba
+                rebalanceUp(nodeToRemove.parent, nodeToRemove.data);
+            }
+        }
+        
+        // Caso 2: Solo hijo derecho
+        else if (nodeToRemove.left == null) {
+            nodeToRemove.right.parent = nodeToRemove.parent;
+            
+            if (nodeToRemove.parent == null) {
+                // Es la raíz
+                root = nodeToRemove.right;
+            } else {
+                // Conectar el hijo con el abuelo
+                if (nodeToRemove.parent.left == nodeToRemove) {
+                    nodeToRemove.parent.left = nodeToRemove.right;
+                } else {
+                    nodeToRemove.parent.right = nodeToRemove.right;
+                }
+                rebalanceUp(nodeToRemove.parent, nodeToRemove.data);
+            }
+        }
+        
+        // Caso 3: Solo hijo izquierdo
+        else if (nodeToRemove.right == null) {
+            nodeToRemove.left.parent = nodeToRemove.parent;
+            
+            if (nodeToRemove.parent == null) {
+                // Es la raíz
+                root = nodeToRemove.left;
+            } else {
+                // Conectar el hijo con el abuelo
+                if (nodeToRemove.parent.left.equals(nodeToRemove)) {
+                    nodeToRemove.parent.left = nodeToRemove.left;
+                } else {
+                    nodeToRemove.parent.right = nodeToRemove.left;
+                }
+                rebalanceUp(nodeToRemove.parent, nodeToRemove.data);
+            }
+        }
+        
+        // Caso 4: Dos hijos - reemplazar con sucesor
+        else {
+            Node<K, V> successor = findMin(nodeToRemove.right);
+            nodeToRemove.data = successor.data;
+            nodeToRemove.key = successor.key;
+            
+            // Recursivamente eliminar el sucesor (que tendrá máximo 1 hijo)
+            removeFromAVL(successor);
+        }
+    }
+
+    /**
+     * Rebalance the tree upwards after a removal.
+     * 
+     * @param node the node to start rebalancing from
+     * @param removedData the data that was removed, used to determine the rotation direction
+     */
+    private void rebalanceUp(Node<K, V> node, V removedData) {
+        while (node != null) {
+            node = rebalance(node, removedData, false);
+            node = node.parent;
+        }
+    }
+
+    /*******************************************/
+    /* ** metodos para la parte del HashMap ** */ // TODO
+    /*******************************************/
+
+    /**
+     * Hashes an integer key
+     * 
+     * @param x the key to hash
+     * @return the hashed key
+     */
+    public int hash(int x) { // como la key que recibe es un entero, el hashcode de un entero es el mismo xd
+        x = ((x >>> 16) ^ x) * 0x45d9f3b;
+        x = ((x >>> 16) ^ x) * 0x45d9f3b;
+        x = (x >>> 16) ^ x;
+        return x & (capacity -1);
+    }
+
+    /**
      * Resizes the hash map when the load factor exceeds the threshold.
      */
     private void resize(){
+        Node<K, V>[] oldBuckets = buckets;
+        int oldCapacity = capacity;
+        
+        this.capacity = oldCapacity * 2;
+        buckets = new Node[capacity];
 
+        size = 0;
+        
+        // Rehash todos los elementos existentes
+        for (int i = 0; i < oldCapacity; i++) {
+            Node<K, V> curr = oldBuckets[i];
+            
+            while (curr != null) {
+                Node<K, V> next = curr.next;
+                
+                int newIdx = hash(curr.key.hashCode());
+                curr.next = buckets[newIdx];
+                buckets[newIdx] = curr;
+                size++;
+                
+                curr = next;
+            }
+        }
     }
 
     /**
-     * Rehashes the keys in the hash map to a new bucket array.
-     * This is called when resizing the hash map.
-     * @param key The key to rehash.
+     * Replaces the value for the given key.
+     * 
+     * @param key the key to replace
+     * @param value the new value
+     * @return the old value, or null if the key was not found
      */
-    private void rehash(K key){
-
-    }
-
     public V replace(K key, V value) {
-        int idx = hash(key);
-        Node<K, V> curr = bucket[idx];
+        int idx = hash(key.hashCode());
+        Node<K, V> curr = buckets[idx];
         while (curr != null){
-            if (curr.key == key){
+            if (curr.key.equals(key)){
                 V val = curr.data;
                 curr.data = value;
                 return val;
@@ -192,25 +323,38 @@ public class AVLHashMap<K, V extends Comparable<V>> {
         return null;
     }
 
+    /**
+     * Checks if the map contains the given key.
+     * 
+     * @param key the key to check
+     * @return true if the key is found, false otherwise
+     */
     public boolean containsKey(K key) {
-        return get(key) != null ? true : false;
+        return get(key) != null;
     }
 
+    /**
+     * Returns the size of the hash map.
+     * 
+     * @return the number of key-value pairs in the map
+     */
     public int size() {
         return this.size;
     }
 
+    /**
+     * Clears the hash map and the AVL tree.
+     * 
+     * This method resets the root of the AVL tree and clears all buckets in the hash map.
+     */
     public void clear() {
         this.root = null;
-        this.size = 0;
-        for (int i = 0; i < capacity; i++){
-            bucket[i] = null;
-        }
+        this.buckets = new Node[capacity];
     }
 
 
     /***************************************/
-    /* ** metodos para la parte del AVL ** */ // TODO solo es una referencia xd
+    /* ** metodos para la parte del AVL ** */ // TODO
     /***************************************/
 
 
@@ -379,6 +523,36 @@ public class AVLHashMap<K, V extends Comparable<V>> {
             printTreeRec(node.left, 
                 prefix + (isRoot ? "" : (isLeft ? "    " : "│   ")), 
                 false, true);
+        }
+    }
+
+    /**
+     * Prints the structure of the hash table
+     */
+    public void printHashTable() {
+        System.out.println("\n=== Hash Table Structure ===");
+        System.out.println("Capacity: " + capacity + " | Size: " + size + " | Load Factor: " + 
+                        String.format("%.2f", (float)size / capacity));
+        System.out.println("============================\n");
+        
+        if (size == 0) {
+            System.out.println("(vacío)");
+            return;
+        }
+        
+        for (int i = 0; i < capacity; i++) {
+            System.out.print("[" + String.format("%2d", i) + "]");
+            
+            if (buckets[i] == null)
+                System.out.println(" -> N");
+            else {
+                Node<K, V> curr = buckets[i];
+                while (curr != null) {
+                    System.out.print(" -> (" + curr.toString() + ")" + 
+                        (curr.next != null ? "" : " -> N\n"));
+                    curr = curr.next;
+                }
+            }
         }
     }
 }

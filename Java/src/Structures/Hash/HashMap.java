@@ -24,11 +24,16 @@ public class HashMap<K, V> implements Map<K, V> {
     private static final float LOAD_FACTOR = 0.75f;
 
     public HashMap(){
-        this.size = 16;
+        this.capacity = 16;
+        this.size = 0;
+        this.buckets = new Node[capacity];
     }
 
-    public HashMap(int size){
-        this.size = size;
+    public HashMap(int capacity){
+        if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
+        this.capacity = capacity;
+        this.size = 0;
+        this.buckets = new Node[capacity];
     }
 
     private int hash(K key){
@@ -37,41 +42,58 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean add(K key, V value) {
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
         int idx = hash(key);
         Node<K, V> curr = buckets[idx];
         while (curr != null){
-            if (curr.key == key){
+            if (curr.key.equals(key)){
                 return false;
             }
             curr = curr.next;
         }
         buckets[idx] = new Node<K, V>(key, value, buckets[idx]);
         size++;
+        if (size >= capacity * LOAD_FACTOR)
+            resize();
         return true;
     }
 
     /**
      * Resizes the hash map when the load factor exceeds the threshold.
      */
-    private void resize(){
+    private void resize() {
+        Node<K, V>[] oldBuckets = buckets;
+        int oldCapacity = capacity;
+        
+        this.capacity = oldCapacity * 2;
+        buckets = new Node[capacity];
 
-    }
-
-    /**
-     * Rehashes the keys in the hash map to a new bucket array.
-     * This is called when resizing the hash map.
-     * @param key The key to rehash.
-     */
-    private void rehash(K key){
-
+        size = 0;
+        
+        // Rehash todos los elementos existentes
+        for (int i = 0; i < oldCapacity; i++) {
+            Node<K, V> curr = oldBuckets[i];
+            
+            while (curr != null) {
+                Node<K, V> next = curr.next;
+                
+                int newIdx = hash(curr.key);
+                curr.next = buckets[newIdx];
+                buckets[newIdx] = curr;
+                size++;
+                
+                curr = next;
+            }
+        }
     }
     
     @Override
     public V replace(K key, V value) {
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
         int idx = hash(key);
         Node<K, V> curr = buckets[idx];
         while (curr != null){
-            if (curr.key == key){
+            if (curr.key.equals(key)){
                 V val = curr.value;
                 curr.value = value;
                 return val;
@@ -83,25 +105,56 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(K key) {
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
         int idx = hash(key);
         Node<K, V> curr = buckets[idx];
         while (curr != null){
-            if (curr.key == key){
+            if (curr.key.equals(key)){
                 return curr.value;
             }
+            curr = curr.next;
         }
         return null;
     }
 
     @Override
     public V remove(K key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
+        int idx = hash(key);
+        Node<K, V> curr = buckets[idx];
+
+        // Si es el primer nodo
+        if (curr != null && curr.key.equals(key)) {
+            buckets[idx] = curr.next;
+            size--;
+            return curr.value;
+        }
+        
+        // Para el resto de nodos
+        while (curr != null && curr.next != null) {
+            if (curr.next.key.equals(key)) {
+                V ret = curr.next.value;
+                curr.next = curr.next.next;
+                size--;
+                return ret;
+            }
+            curr = curr.next;
+        }
+        return null;
     }
 
     @Override
     public boolean containsKey(K key) {
-        return get(key) != null ? true : false;
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
+        int idx = hash(key);
+        Node<K, V> curr = buckets[idx];
+        while (curr != null) {
+            if (curr.key.equals(key)) {
+                return true;
+            }
+            curr = curr.next;
+        }
+        return false;
     }
 
     @Override
@@ -112,8 +165,6 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public void clear() {
         this.size = 0;
-        for (int i = 0; i < capacity; i++){
-            buckets[i] = null;
-        }
+        this.buckets = new Node[capacity];
     }
 }

@@ -60,7 +60,6 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
      * @return updated node
      */
     protected Node<T> postInsert(Node<T> node, T data){
-        System.out.println("post insert bst");
         return node;
     }
 
