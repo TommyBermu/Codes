@@ -76,7 +76,7 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
      * @return updated node
      */
     protected Node<T> removeRec(Node<T> node, T data) {
-        if (node == null) {
+        if (node == null || data == null) {
             System.out.println("Item not in Tree and not removed");
             return node;
         }

@@ -56,9 +56,9 @@ public abstract class NodeBasedBinaryTree<T extends Comparable<T>> implements Tr
     public abstract void remove(T element);
 
     /**
-     * Find the next node (in value)in the BST
+     * Find the next node (in value) in the BST
      * 
-     * @param data data to find next node
+     * @param node node to find next node
      * @return next node
      */
     public Node<T> next(Node<T> node) {

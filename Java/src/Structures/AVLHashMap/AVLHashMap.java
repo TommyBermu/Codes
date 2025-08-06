@@ -12,9 +12,11 @@ public class AVLHashMap<K, V extends Comparable<V>> {
         
         /**
          * Node constructor
-         * s
+         * 
+         * @param key key to store in the node
          * @param data data to store in the node
          * @param parent parent of the node
+         * @param next next node in the linked list
          */
         public Node(K key, V data, Node<K, V> parent, Node<K, V> next) {
             this.key = key;
@@ -39,12 +41,14 @@ public class AVLHashMap<K, V extends Comparable<V>> {
     private int size, capacity;
     private static final float LOAD_FACTOR = 0.75f;
 
+    @SuppressWarnings("unchecked")
     public AVLHashMap(){
         this.capacity = 16;
         this.size = 0;
         this.buckets = new Node[capacity];
     }
 
+    @SuppressWarnings("unchecked")
     public AVLHashMap(int capacity){
         if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
         this.capacity = capacity;
@@ -142,9 +146,7 @@ public class AVLHashMap<K, V extends Comparable<V>> {
         }
 
         removeFromHashMap(key);
-        
         removeFromAVL(node);
-        
         size--;
     }
 
@@ -173,7 +175,7 @@ public class AVLHashMap<K, V extends Comparable<V>> {
     }
 
     /**
-     * TODO Removes a node from the AVL tree.
+     * Removes a node from the AVL tree.
      * 
      * @param nodeToRemove the node to remove
      * @return the updated root of the AVL tree
@@ -185,14 +187,15 @@ public class AVLHashMap<K, V extends Comparable<V>> {
                 // Es la raíz
                 root = null;
             } else {
+                Node<K, V> parent = nodeToRemove.parent;
                 // Desconectar del padre
-                if (nodeToRemove.parent.left.equals(nodeToRemove)) {
-                    nodeToRemove.parent.left = null;
+                if (parent.left != null && parent.left.equals(nodeToRemove)) {
+                    parent.left = null;
                 } else {
-                    nodeToRemove.parent.right = null;
+                    parent.right = null;
                 }
-                // Rebalancear hacia arriba
-                rebalanceUp(nodeToRemove.parent, nodeToRemove.data);
+                // Rebalancear hacia arriba desde el padre
+                rebalanceUp(parent, nodeToRemove.data);
             }
         }
         
@@ -205,7 +208,7 @@ public class AVLHashMap<K, V extends Comparable<V>> {
                 root = nodeToRemove.right;
             } else {
                 // Conectar el hijo con el abuelo
-                if (nodeToRemove.parent.left == nodeToRemove) {
+                if (nodeToRemove.parent.left != null && nodeToRemove.parent.left.equals(nodeToRemove)) {
                     nodeToRemove.parent.left = nodeToRemove.right;
                 } else {
                     nodeToRemove.parent.right = nodeToRemove.right;
@@ -223,7 +226,7 @@ public class AVLHashMap<K, V extends Comparable<V>> {
                 root = nodeToRemove.left;
             } else {
                 // Conectar el hijo con el abuelo
-                if (nodeToRemove.parent.left.equals(nodeToRemove)) {
+                if (nodeToRemove.parent.left != null && nodeToRemove.parent.left.equals(nodeToRemove)) {
                     nodeToRemove.parent.left = nodeToRemove.left;
                 } else {
                     nodeToRemove.parent.right = nodeToRemove.left;
@@ -235,8 +238,10 @@ public class AVLHashMap<K, V extends Comparable<V>> {
         // Caso 4: Dos hijos - reemplazar con sucesor
         else {
             Node<K, V> successor = findMin(nodeToRemove.right);
+            
+            // CORREGIDO: Solo copiar el valor, NO la clave
+            // La clave debe mantenerse igual para preservar la consistencia del HashMap
             nodeToRemove.data = successor.data;
-            nodeToRemove.key = successor.key;
             
             // Recursivamente eliminar el sucesor (que tendrá máximo 1 hijo)
             removeFromAVL(successor);
@@ -251,8 +256,24 @@ public class AVLHashMap<K, V extends Comparable<V>> {
      */
     private void rebalanceUp(Node<K, V> node, V removedData) {
         while (node != null) {
-            node = rebalance(node, removedData, false);
-            node = node.parent;
+            Node<K, V> newRoot = rebalance(node, removedData, false);
+            
+            // Si el nodo cambió después del rebalance, actualizar las referencias del padre
+            if (newRoot != node) {
+                if (newRoot.parent == null) {
+                    // Se convirtió en la nueva raíz
+                    root = newRoot;
+                } else {
+                    // Actualizar la referencia del padre
+                    if (newRoot.parent.left == node) {
+                        newRoot.parent.left = newRoot;
+                    } else {
+                        newRoot.parent.right = newRoot;
+                    }
+                }
+            }
+            
+            node = newRoot.parent;
         }
     }
 
@@ -276,6 +297,7 @@ public class AVLHashMap<K, V extends Comparable<V>> {
     /**
      * Resizes the hash map when the load factor exceeds the threshold.
      */
+    @SuppressWarnings("unchecked")
     private void resize(){
         Node<K, V>[] oldBuckets = buckets;
         int oldCapacity = capacity;
@@ -310,17 +332,19 @@ public class AVLHashMap<K, V extends Comparable<V>> {
      * @return the old value, or null if the key was not found
      */
     public V replace(K key, V value) {
-        int idx = hash(key.hashCode());
-        Node<K, V> curr = buckets[idx];
-        while (curr != null){
-            if (curr.key.equals(key)){
-                V val = curr.data;
-                curr.data = value;
-                return val;
-            }
-            curr = curr.next;
+        Node<K, V> node = getNode(key);
+        if (node == null) {
+            return null;
         }
-        return null;
+        
+        V oldValue = node.data;
+        
+        if (!oldValue.equals(value)) {
+            remove(key);
+            insert(key, value);
+        }
+        
+        return oldValue;
     }
 
     /**
@@ -347,6 +371,7 @@ public class AVLHashMap<K, V extends Comparable<V>> {
      * 
      * This method resets the root of the AVL tree and clears all buckets in the hash map.
      */
+    @SuppressWarnings("unchecked")
     public void clear() {
         this.root = null;
         this.buckets = new Node[capacity];
@@ -405,6 +430,12 @@ public class AVLHashMap<K, V extends Comparable<V>> {
         newRoot.left = node;
         node.right = TMP;
 
+        newRoot.parent = node.parent;
+        node.parent = newRoot;
+        if (TMP != null) {
+            TMP.parent = node;
+        }
+
         updateHeight(node);
         updateHeight(newRoot);
 
@@ -423,6 +454,12 @@ public class AVLHashMap<K, V extends Comparable<V>> {
 
         newRoot.right = node;
         node.left = TMP;
+
+        newRoot.parent = node.parent;
+        node.parent = newRoot;
+        if (TMP != null) {
+            TMP.parent = node;
+        }
 
         updateHeight(node);
         updateHeight(newRoot);
@@ -541,15 +578,15 @@ public class AVLHashMap<K, V extends Comparable<V>> {
         }
         
         for (int i = 0; i < capacity; i++) {
-            System.out.print("[" + String.format("%2d", i) + "]");
+            System.out.print("[" + String.format("%3d", i) + "]");
             
             if (buckets[i] == null)
-                System.out.println(" -> N");
+                System.out.println(" -> n");
             else {
                 Node<K, V> curr = buckets[i];
                 while (curr != null) {
-                    System.out.print(" -> (" + curr.toString() + ")" + 
-                        (curr.next != null ? "" : " -> N\n"));
+                    System.out.print(" -> " + curr.toString() +
+                        (curr.next != null ? "" : " -> n\n"));
                     curr = curr.next;
                 }
             }
