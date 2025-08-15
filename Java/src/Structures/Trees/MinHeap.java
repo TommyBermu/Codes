@@ -1,29 +1,57 @@
 package Structures.Trees;
 
-public class MinHeap<T extends Comparable<T>> extends CBT<T>{
-    T minPriority;
+public class MinHeap<T extends Comparable<T>> extends CBT<T> {
+    /**
+     * Constructor for creating a MinHeap with a specified capacity and minimum
+     * priority.
+     * 
+     * @param capacity    the maximum capacity of the heap
+     * @param minPriority the minimum priority value
+     */
     public MinHeap(int capacity, T minPriority) {
         super(capacity);
         this.minPriority = minPriority;
     }
 
+    /**
+     * Constructor for creating a MinHeap with a specified minimum priority.
+     * 
+     * @param minPriority the minimum priority value
+     */
     public MinHeap(T minPriority) {
         super();
         this.minPriority = minPriority;
     }
 
-    public MinHeap(){
+    /**
+     * Default constructor for creating an empty MinHeap.
+     */
+    public MinHeap() {
         super();
     }
 
-    public void shiftUp(int i){
-        while (i > 0 && tree[parent(i)].compareTo(tree[i]) > 0){
-            swap(parent(i), i);
+    private T minPriority;
+
+    /**
+     * shifts the element at index i up in the heap to maintain the min-heap
+     * property.
+     * 
+     * @param i the index of the element to shift up
+     */
+    private void shiftUp(int i) {
+        while (i > 0 && tree[parent(i)].compareTo(tree[i]) > 0) {
+            swap(tree, parent(i), i);
             i = parent(i);
         }
-    }    
-    
-    public void shiftDown(int i){
+    }
+
+    /**
+     * shifts the element at index i down in the heap to maintain the min-heap
+     * property.
+     * 
+     * @param i the index of the element to shift down
+     */
+    private static <T extends Comparable<T>> void shiftDown(T[] tree, int size, int i) {
         int maxIndex = i;
         int l = leftChild(i);
         int r = rightChild(i);
@@ -34,57 +62,79 @@ public class MinHeap<T extends Comparable<T>> extends CBT<T>{
         if (r < size && tree[r].compareTo(tree[maxIndex]) < 0)
             maxIndex = r;
 
-        if (i != maxIndex){
-            swap(i, maxIndex);
-            shiftDown(maxIndex);
+        if (i != maxIndex) {
+            swap(tree, i, maxIndex);
+            shiftDown(tree, size, maxIndex);
         }
     }
 
-    private void swap(int i, int j) {
-        T temp = tree[i];
-        tree[i] = tree[j];
-        tree[j] = temp;
-    }
-
     @Override
-    public void insert(T element){
+    public void insert(T element) {
         super.insert(element);
-        shiftUp(size-1);
+        shiftUp(size - 1);
     }
 
-    public T extractMin(){
+    /**
+     * Extracts the minimum element from the heap, which is the root of the heap.
+     * 
+     * @return the minimum element in the heap
+     */
+    public T extractMin() {
         T result = tree[0];
         tree[0] = tree[--size];
-        shiftDown(0);
+        shiftDown(tree, size, 0);
         return result;
     }
 
     @Override
-    public void remove(T element){
+    public void remove(T element) {
         delete(getIndex(element));
     }
 
+    /**
+     * Deletes the element at index i in the heap and returns it.
+     * 
+     * @param i the index of the element to delete
+     * @return the deleted element
+     */
     public T delete(int i) {
         setValue(i, minPriority);
         shiftUp(i);
         return extractMin();
     }
 
-    public void changePriority(int i, T p){
+    /**
+     * Changes the priority of the element at index i to the new value p.
+     * 
+     * @param i the index of the element whose priority is to be changed
+     * @param p the new priority value
+     */
+    public void changePriority(int i, T p) {
         T oldp = tree[i];
         tree[i] = p;
-        if(p.compareTo(oldp) < 0)
+        if (p.compareTo(oldp) < 0)
             shiftUp(i);
         else
-            shiftDown(i);
+            shiftDown(tree, size, i);
     }
 
-    public static <T extends Comparable<T>> void heapSort(T[] array){
-        MinHeap<T> mHeap = new MinHeap<>();
-        for (T item: array)
-            mHeap.insert(item);
+    /**
+     * Performs heap sort on the given array using the MinHeap structure, it sort
+     * the array in descending order.
+     * 
+     * @param <T>   the type of elements in the array, which must be comparable
+     * @param array the array to be sorted
+     */
+    public static <T extends Comparable<T>> void heapSort(T[] array) {
+        int n = array.length;
 
-        for(int i = array.length - 1; i >= 0; i--)
-            array[i] = mHeap.extractMin();
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            shiftDown(array, n, i);
+        }
+
+        for (int i = n - 1; i > 0; i--) {
+            swap(array, 0, i);
+            shiftDown(array, i, 0);
+        }
     }
 }
