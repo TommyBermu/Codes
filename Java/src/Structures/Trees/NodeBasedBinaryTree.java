@@ -7,13 +7,13 @@ public abstract class NodeBasedBinaryTree<T extends Comparable<T>> implements Tr
     protected static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         protected T data;
         protected Node<T> left, right, parent;
-        protected int height = 1;     //para el AVL
+        protected int height = 1; // para el AVL
         protected boolean red = true; // para red-black tree
 
         /**
          * Node constructor
          * 
-         * @param data data to store in the node
+         * @param data   data to store in the node
          * @param parent parent of the node
          */
         public Node(T data, Node<T> parent) {
@@ -201,27 +201,28 @@ public abstract class NodeBasedBinaryTree<T extends Comparable<T>> implements Tr
      * The recursive method to print the tree
      */
     private void printTreeRec(Node<T> node, String prefix, boolean isRoot, boolean isLeft) {
-        if (node == null) return;
-        
+        if (node == null)
+            return;
+
         // Primero procesamos el hijo derecho (va hacia arriba)
         if (node.right != null) {
-            printTreeRec(node.right, 
-                prefix + (isRoot ? "" : (isLeft ? "│   " : "    ")), 
-                false, false);
+            printTreeRec(node.right,
+                    prefix + (isRoot ? "" : (isLeft ? "│   " : "    ")),
+                    false, false);
         }
-        
+
         // Luego imprimimos el nodo actual
         if (isRoot) {
             System.out.println(prefix + node);
         } else {
             System.out.println(prefix + (isLeft ? "└── " : "┌── ") + node);
         }
-        
+
         // Finalmente procesamos el hijo izquierdo (va hacia abajo)
         if (node.left != null) {
-            printTreeRec(node.left, 
-                prefix + (isRoot ? "" : (isLeft ? "    " : "│   ")), 
-                false, true);
+            printTreeRec(node.left,
+                    prefix + (isRoot ? "" : (isLeft ? "    " : "│   ")),
+                    false, true);
         }
     }
 }

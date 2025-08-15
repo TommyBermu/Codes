@@ -2,7 +2,8 @@ package Structures.Trees;
 
 /**
  * @author Tomas Bermudez
- *         This class is used when we do not have to do so many insertions/deletions
+ *         This class is used when we do not have to do so many
+ *         insertions/deletions
  *         due to this class make rotations frequently.
  */
 public class AVL<T extends Comparable<T>> extends BST<T> implements SelfBalanced<T> {

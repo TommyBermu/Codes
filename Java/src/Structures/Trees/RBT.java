@@ -38,7 +38,7 @@ public class RBT<T extends Comparable<T>> extends BST<T> implements SelfBalanced
     public Node<T> rebalance(Node<T> node, T data, boolean ins) {
         if (node.parent != null && !node.parent.red)
             return node;
-        //if () // case 1: uncle red
+        // if () // case 1: uncle red
 
         // case 2.1: uncle black and this is a right child
         // case 2.2: uncle black and this si a left child
@@ -49,6 +49,7 @@ public class RBT<T extends Comparable<T>> extends BST<T> implements SelfBalanced
         return node;
     }
 
+    @SuppressWarnings("unused")
     private void recolor(Node<T> node) {
         if (node == null || node.parent == null)
             return;
@@ -64,10 +65,10 @@ public class RBT<T extends Comparable<T>> extends BST<T> implements SelfBalanced
     }
 
     public void fixInsert(Node<T> node) {
-        while (node.parent != null && node.parent.red){
-            if (node.parent == node.parent.parent.left){
+        while (node.parent != null && node.parent.red) {
+            if (node.parent == node.parent.parent.left) {
                 Node<T> uncle = node.parent.parent.right;
-                if(uncle.red){
+                if (uncle.red) {
                     node.parent.red = false;
                     uncle.red = false;
                     node.parent.parent.red = true;
@@ -83,7 +84,7 @@ public class RBT<T extends Comparable<T>> extends BST<T> implements SelfBalanced
                 }
             } else {
                 Node<T> uncle = node.parent.parent.left;
-                if(uncle.red){
+                if (uncle.red) {
                     node.parent.red = false;
                     uncle.red = false;
                     node.parent.parent.red = true;
@@ -99,7 +100,7 @@ public class RBT<T extends Comparable<T>> extends BST<T> implements SelfBalanced
                 }
             }
         }
-        
+
     }
 
     private boolean getColor(Node<T> node) {

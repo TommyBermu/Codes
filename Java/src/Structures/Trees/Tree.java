@@ -3,7 +3,7 @@ package Structures.Trees;
 /**
  * @author Tomas Bermudez
  */
-public interface Tree<T>{
+public interface Tree<T> {
     /**
      * Insert a new node into the tree
      * 

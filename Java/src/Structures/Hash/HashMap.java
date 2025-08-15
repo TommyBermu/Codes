@@ -23,12 +23,14 @@ public class HashMap<K, V> implements Map<K, V> {
     private int size, capacity;
     private static final float LOAD_FACTOR = 0.75f;
 
+    @SuppressWarnings("unchecked")
     public HashMap(){
         this.capacity = 16;
         this.size = 0;
         this.buckets = new Node[capacity];
     }
 
+    @SuppressWarnings("unchecked")
     public HashMap(int capacity){
         if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
         this.capacity = capacity;

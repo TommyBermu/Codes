@@ -53,13 +53,14 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
 
     /**
      * Post-insert hook method to allow for additional operations after insertion
-     * This method can be overridden in subclasses to perform additional operations after a node has been inserted.
+     * This method can be overridden in subclasses to perform additional operations
+     * after a node has been inserted.
      * 
-     * @param node  node that was just inserted
-     * @param data  data that was inserted
+     * @param node node that was just inserted
+     * @param data data that was inserted
      * @return updated node
      */
-    protected Node<T> postInsert(Node<T> node, T data){
+    protected Node<T> postInsert(Node<T> node, T data) {
         return node;
     }
 
@@ -113,13 +114,14 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
 
     /**
      * Post-delete hook method to allow for additional operations after deletion
-     * This method can be overridden in subclasses to perform additional operations after a node has been deleted.
+     * This method can be overridden in subclasses to perform additional operations
+     * after a node has been deleted.
      *
-     * @param node  node that was just deleted
-     * @param data  data that was deleted
+     * @param node node that was just deleted
+     * @param data data that was deleted
      * @return updated node
      */
-    protected Node<T> postDelete(Node<T> node, T data){
+    protected Node<T> postDelete(Node<T> node, T data) {
         return node;
     }
 
@@ -173,33 +175,6 @@ public class BST<T extends Comparable<T>> extends NodeBasedBinaryTree<T> {
             return fetchRec(node.left, data);
         else
             return fetchRec(node.right, data);
-    }
-
-    /**
-     * Nearest neighbors search
-     * 
-     * @param data data to search nearest neighbors
-     */
-    public void nearestNeighbors(T data) {
-        /*
-         * TODO ver como hacer esto xd
-         * Node<T> predecesor, sucesor;
-         * Node<T> node = root;
-         * 
-         * while (node != null) {
-         * if (data.compareTo(node.data) < 0) {
-         * sucesor = node;
-         * node = node.left;
-         * } else if (data.compareTo(node.data) > 0) {
-         * predecesor = node;
-         * node = node.right;
-         * } else {
-         * predecesor = prev(node);
-         * sucesor = next(node);
-         * break;
-         * }
-         * }
-         */
     }
 
     /**
