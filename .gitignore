@@ -1,0 +1,16 @@
+.vscode
+.idea
+
+*.tsv
+*.csv
+*.bin
+*.o
+*.pdf
+*.bak
+*.log
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+*.local
+

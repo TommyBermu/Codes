@@ -1,1 +1,1 @@
-# Codes es un repositorio donde subo mis notitas de programacion y algun que otro proyecto chimbo :)
+# Codes es un repositorio personal donde subo mis implementaciones de estructuras, algoritmos junto con quices o notas de clase
