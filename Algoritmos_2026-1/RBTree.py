@@ -11,7 +11,7 @@ class Node:
 
 class RBTree:
     def __init__(self):
-        self.nil = Node(key=None, color=BLACK) # centinela
+        self.nil = Node(None, BLACK) # centinela
         self.nil.left = self.nil
         self.nil.right = self.nil
         self.nil.p = self.nil
